@@ -5,6 +5,7 @@ namespace App\Services;
 use Illuminate\Http\Request;
 use App\Libraries\Tools;
 use App\Models\Marker;
+use App\Models\MarkerMedia;
 use App\Models\Plate;
 
 class MarkerService
@@ -39,6 +40,17 @@ class MarkerService
             'additional_info' => $request->additional_info,
             'notify_when_found' => ('on' == $request->notify_when_found),
         ]);
+
+        if(null != $request->media && is_array($request->media) && count($request->media) > 0){
+            foreach($request->media as $key => $mediaId){
+                if($key < 5){
+                    MarkerMedia::create([
+                        'marker_id' => $marker->id,
+                        'media_id' => $mediaId,
+                    ]);
+                }
+            }
+        }
 
         return true;
     }

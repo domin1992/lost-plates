@@ -10,6 +10,7 @@ require('jquery-toast-plugin');
 Vue.component('big-map', require('./components/BigMap.vue').default);
 Vue.component('add-marker-form', require('./components/AddMarkerForm.vue').default);
 Vue.component('map-markers-list', require('./components/MapMarkersList.vue').default);
+Vue.component('images-gallery', require('./components/ImagesGallery.vue').default);
 
 const app = window.app = new Vue({
     el: '#lost-plates',

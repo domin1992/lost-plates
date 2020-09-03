@@ -13,7 +13,7 @@ class MarkerTransformer extends TransformerAbstract
      * @var array
      */
     protected $defaultIncludes = [
-        //
+        'marker_media',
     ];
 
     /**
@@ -45,5 +45,12 @@ class MarkerTransformer extends TransformerAbstract
             'phone_number' => $marker->hiddenPhoneNumber(),
             'email' => $marker->hiddenEmail(),
         ];
+    }
+
+    public function includeMarkerMedia(Marker $marker)
+    {
+        $markerMedia = $marker->markerMedia()->get();
+
+        return $this->collection($markerMedia, new MarkerMediaTransformer);
     }
 }

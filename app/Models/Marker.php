@@ -29,6 +29,11 @@ class Marker extends Model
         return $this->belongsTo(PhoneNumberPrefix::class, 'phone_number_prefix_id', 'id');
     }
 
+    public function markerMedia()
+    {
+        return $this->hasMany(MarkerMedia::class);
+    }
+
     public function getPhoneNumberPrefixFormatted()
     {
         $phoneNumberPrefix = $this->phoneNumberPrefix()->first();

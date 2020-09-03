@@ -1,10 +1,20 @@
 <template>
     <div class="map-wrapper">
         <div class="map-holder">
+            <div class="alert alert-info information-toast alert-dismissible fade show">
+                Kliknij na mapie, aby dodać pineskę.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
             <div id="map"></div>
         </div>
         <div class="filters-wrapper">
-            <h1 class="text-center">Zagubione<br><small>tablice rejestracyjne</small></h1>
+            <h1 class="text-center">
+                <p class="logo">
+                    Lost plates
+                </p>
+            </h1>
             <div class="filters">
                 <div class="form-group">
                     <label for="plate_number">Szukaj po numerze tablicy</label>
@@ -15,9 +25,7 @@
                 v-bind:markers="markers"
                 v-bind:active-marker-id="activeMarkerId"
             ></map-markers-list>
-            <!-- <div class="buttons-wrapper">
-                <button type="button" class="btn btn-primary btn-block" v-on:click="showAddMarkerForm()">Dodaj pineskę</button>
-            </div> -->
+            <images-gallery></images-gallery>
         </div>
     </div>
 </template>
@@ -37,7 +45,6 @@
             };
         },
         created(){
-            // this.getMarkers();
         },
         mounted(){
             let self = this;
@@ -51,12 +58,13 @@
         methods: {
             initMap(params = {}){
                 let self = this;
+                let mapCenter = {lat: 51.9259872, lng: 18.880941};
 
                 if($('#map').length <= 0)
                     return;
 
                 this.map = new google.maps.Map($('#map')[0], {
-                    center: {lat: 51.9259872, lng: 18.880941},
+                    center: mapCenter,
                     zoom: 7,
                 });
 
@@ -69,7 +77,28 @@
                     }
                 });
 
+                google.maps.event.addListener(this.map, 'idle', function(){
+                    self.getMarkers();
+                });
+
+                this.setMapCenterBasedOnNavigator();
+
                 this.getMarkers();
+            },
+            setMapCenterBasedOnNavigator(){
+                let self = this;
+
+                if(navigator.geolocation){
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        if(null != self.map){
+                            self.map.setCenter({
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude
+                            });
+                            self.map.setZoom(11);
+                        }
+                    });
+                }
             },
             placeNewMarker(latLng){
                 let infowindow = new google.maps.InfoWindow({
@@ -106,7 +135,19 @@
             getMarkers(){
                 let self = this;
 
-                let params = {};
+                let bounds = self.map.getBounds();
+                if(undefined === bounds){
+                    return;
+                }
+
+                let params = {
+                    corners: {
+                        nw_lat: bounds.getNorthEast().lat(),
+                        nw_lng: bounds.getSouthWest().lng(),
+                        se_lat: bounds.getSouthWest().lat(),
+                        se_lng: bounds.getNorthEast().lng(),
+                    }
+                };
 
                 if('' != self.plateNumber){
                     params.plate_number = self.plateNumber;
@@ -167,6 +208,7 @@
                     for(let i in self.markers){
                         if(self.markers[i].id == markerId){
                             self.markers[i].phone_number = response.data.phone_number;
+                            self.markers[i].phone_number_visible = true;
                         }
                     }
                 })
@@ -182,6 +224,7 @@
                     for(let i in self.markers){
                         if(self.markers[i].id == markerId){
                             self.markers[i].email = response.data.email;
+                            self.markers[i].email_visible = true;
                         }
                     }
                 })

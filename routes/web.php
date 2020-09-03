@@ -17,7 +17,10 @@ Route::get('/', 'Front\MapsController@index')->name('front.maps.index');
 
 Route::prefix('ajax')->group(function(){
     Route::get('/markers', 'Front\MarkersController@ajaxIndex')->name('front.ajax.markers.index');
+    Route::get('/markers/{id}', 'Front\MarkersController@ajaxShow')->name('front.ajax.markers.show');
     Route::get('/markers/{id}/phone-number', 'Front\MarkersController@ajaxGetPhoneNumber')->name('front.ajax.markers.get-phone-number');
     Route::get('/markers/{id}/email', 'Front\MarkersController@ajaxGetEmail')->name('front.ajax.markers.get-email');
     Route::post('/markers', 'Front\MarkersController@ajaxStore')->name('front.ajax.markers.store');
+    Route::post('/media', 'Front\MediaController@ajaxStore')->name('front.ajax.media.store');
+    Route::delete('/media/{id}', 'Front\MediaController@ajaxDestroy')->name('front.ajax.media.destroy');
 });

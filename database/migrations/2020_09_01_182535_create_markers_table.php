@@ -17,8 +17,8 @@ class CreateMarkersTable extends Migration
             $table->id();
             $table->integer('plate_id');
             $table->string('type');
-            $table->decimal('lat', 10, 8);
-            $table->decimal('lng', 10, 8);
+            $table->decimal('lat', 11, 8);
+            $table->decimal('lng', 11, 8);
             $table->decimal('radius', 20, 6)->nullable();
             $table->integer('phone_number_prefix_id');
             $table->string('phone_number')->nullable();

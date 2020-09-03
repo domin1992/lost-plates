@@ -9,6 +9,7 @@ use App\Rules\PhoneNumberValidationRule;
 use App\Services\MarkerService;
 use App\Transformers\MarkerTransformer;
 use DB;
+use Carbon\Carbon;
 
 class MarkersController extends Controller
 {
@@ -73,13 +74,35 @@ class MarkersController extends Controller
             $results = $results->where('p.number', 'LIKE', '%'.$request->plate_number.'%');
         }
 
-        $results = $results->pluck('m.id');
+        if($request->corners != null){
+            $corners = json_decode($request->corners);
+            $results = $results->where([
+                ['m.lat', '<=', $corners->nw_lat],
+                ['m.lng', '>=', $corners->nw_lng],
+                ['m.lat', '>=', $corners->se_lat],
+                ['m.lng', '<=', $corners->se_lng],
+            ]);
+        }
+
+        $results = $results->where('m.created_at', '>=', Carbon::now()->subWeeks(3))->pluck('m.id');
         $markersCollection = Marker::whereIn('id', $results)->get();
         $markers = fractal($markersCollection, new MarkerTransformer)
             ->toArray();
 
         return response()->json([
             'markers' => $markers,
+        ]);
+    }
+
+    public function ajaxShow(Request $request, $id)
+    {
+        $markerModel = Marker::findOrFail($id);
+
+        $marker = fractal($markerModel, new MarkerTransformer)
+            ->toArray();
+
+        return response()->json([
+            'marker' => $marker,
         ]);
     }
 

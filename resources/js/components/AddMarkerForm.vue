@@ -99,6 +99,30 @@
                             </div>
                             <small class="form-text text-muted" v-else>Podpowiedz gdzie znajduje się ta tablica rejestracyjna, aby uławić poszukiwania.</small>
                         </div>
+                        <div class="form-group" v-if="mediaCollection.length < 5">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="media" name="media" v-on:change="uploadMedia()" accept=".jpg, .jpeg, .png, .webp">
+                                <label class="custom-file-label" for="media">Wgraj zdjęcia</label>
+                            </div>
+                            <small class="form-text text-muted">max. 5 zdjęć, dozwolone formaty jpg, jpeg, png, webp</small>
+                        </div>
+                        <div class="form-group">
+                            <div class="miniatures-gallery row">
+                                <div class="col-lg-3 mb-2" v-for="(media, index) in mediaCollection">
+                                    <div class="miniature-item">
+                                        <button type="button" v-on:click="removeMedia(index)"><i class="fas fa-trash"></i></button>
+                                        <img v-bind:src="media.url.miniature" class="img-fluid">
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 mb-2" v-if="uploadingMedia">
+                                    <div class="miniature-item miniature-item-loading">
+                                        <div class="icon-wrapper">
+                                            <i class="fas fa-circle-notch fa-spin"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -125,6 +149,8 @@
                 email: '',
                 radius: '',
                 errors: {},
+                uploadingMedia: false,
+                mediaCollection: [],
             };
         },
         created(){
@@ -143,6 +169,11 @@
                 let self = this;
                 self.errors = {};
 
+                let mediaIds = [];
+                for(let i in self.mediaCollection){
+                    mediaIds.push(self.mediaCollection[i].id);
+                }
+
                 axios.post('/ajax/markers', {
                     lat: self.lat,
                     lng: self.lng,
@@ -153,6 +184,7 @@
                     notify_when_found: self.notifyWhenFound,
                     email: self.email,
                     radius: self.radius,
+                    media: mediaIds,
                 })
                 .then(response => {
                     $('#addMarkerFormModal').modal('hide');
@@ -176,6 +208,47 @@
             },
             typeChanged(){
                 this.errors = {};
+            },
+            uploadMedia(){
+                let self = this;
+
+                let data = new FormData();
+
+                data.append('image', $('#media')[0].files[0]);
+                data.append('file_type', 'image');
+                data.append('image_type', 'marker');
+
+                self.uploadingMedia = true;
+
+                axios.post('/ajax/media', data, {
+                    headers: {
+                        'accept': 'application/json',
+                        'Accept-Language': 'en-US,en;q=0.8',
+                        'Content-Type': `multipart/form-data; boundary=${data._boundary}`,
+                    }
+                })
+                .then(response => {
+                    self.uploadingMedia = false;
+                    $('#media').val();
+                    self.mediaCollection.push(response.data.media);
+                })
+                .catch(error => {
+                    if(error.response.status == 422){
+                        for(var errorItem in error.response.data.errors){
+                            self.$root.$options.methods.toast('warning', error.response.data.errors[errorItem][0]);
+                        }
+                        self.uploadingMedia = false;
+                    }
+                });
+            },
+            removeMedia(index){
+                let self = this;
+
+                axios.post('/ajax/media/' + self.mediaCollection[index].id, {
+                    _method: 'DELETE',
+                });
+
+                self.mediaCollection.splice(index, 1);
             },
         },
     }
