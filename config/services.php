@@ -18,6 +18,7 @@ return [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),
         'endpoint' => env('MAILGUN_ENDPOINT', 'api.mailgun.net'),
+        'scheme' => 'https',
     ],
 
     'postmark' => [
@@ -30,4 +31,8 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'google' => [
+        'cloud_api_key' => env('GOOGLE_CLOUD_API_KEY'),
+        'tag_manager_container_id' => env('GOOGLE_TAG_MANAGER_CONTAINER_ID'),
+    ],
 ];

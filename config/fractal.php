@@ -6,7 +6,7 @@ return [
      * may be left empty to use Fractal's default one. This can either be a
      * string or a League\Fractal\Serializer\SerializerAbstract subclass.
      */
-    'default_serializer' => 'App\Serializers\ArraySerializer',
+    'default_serializer' => App\Serializers\ArraySerializer::class,
 
     /* The default paginator to be used when performing a transformation. It
      * may be left empty to use Fractal's default one. This can either be a
@@ -15,7 +15,7 @@ return [
     'default_paginator' => '',
 
     /*
-     * League\Fractal\Serializer\JsonApiSerializer will use this value to
+     * League\Fractal\Serializer\JsonApiSerializer will use this value
      * as a prefix for generated links. Set to `null` to disable this.
      */
     'base_url' => null,

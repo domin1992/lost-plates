@@ -2,8 +2,8 @@
 
 namespace App\Transformers;
 
-use League\Fractal\TransformerAbstract;
 use App\Models\MarkerMedia;
+use League\Fractal\TransformerAbstract;
 
 class MarkerMediaTransformer extends TransformerAbstract
 {
@@ -12,19 +12,19 @@ class MarkerMediaTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $defaultIncludes = [
+    protected array $defaultIncludes = [
         'media',
     ];
-
+    
     /**
      * List of resources possible to include
      *
      * @var array
      */
-    protected $availableIncludes = [
+    protected array $availableIncludes = [
         //
     ];
-
+    
     /**
      * A Fractal transformer.
      *

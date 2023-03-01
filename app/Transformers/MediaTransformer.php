@@ -2,9 +2,8 @@
 
 namespace App\Transformers;
 
-use League\Fractal\TransformerAbstract;
-use App\Defines\ImageSize;
 use App\Models\Media;
+use League\Fractal\TransformerAbstract;
 
 class MediaTransformer extends TransformerAbstract
 {
@@ -13,19 +12,19 @@ class MediaTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $defaultIncludes = [
+    protected array $defaultIncludes = [
         //
     ];
-
+    
     /**
      * List of resources possible to include
      *
      * @var array
      */
-    protected $availableIncludes = [
+    protected array $availableIncludes = [
         //
     ];
-
+    
     /**
      * A Fractal transformer.
      *
@@ -35,13 +34,14 @@ class MediaTransformer extends TransformerAbstract
     {
         $url = '';
 
-        if($media->file_type == 'image'){
-            $imageSize = ImageSize::getBySlug($media->image_type);
-            if(isset($imageSize['sizes']) && is_array($imageSize['sizes']) && count($imageSize['sizes']) > 0){
-                $url = [];
-                $url['original'] = $media->url('');
-                foreach($imageSize['sizes'] as $key => $size){
-                    $url[$key] = $media->url($key);
+        if ($media->type == 'image') {
+            $url = [];
+            $url['original'] = $media->url('');
+            foreach (config('media-manager.image-types') as $imageTypeSlug => $imageType) {
+                if ($media->image_type == $imageTypeSlug) {
+                    foreach ($imageType as $imageSizeSlug => $imageSize) {
+                        $url[$imageSizeSlug] = $media->url($imageSizeSlug);
+                    }
                 }
             }
         }
@@ -52,10 +52,10 @@ class MediaTransformer extends TransformerAbstract
         return [
             'id' => $media->id,
             'user_id' => $media->user_id,
-            'file_type' => $media->file_type,
+            'file_type' => $media->type,
             'image_type' => $media->image_type,
-            'file_name' => $media->file_name,
-            'file_extension' => $media->file_extension,
+            'file_name' => $media->name,
+            'file_extension' => $media->extension,
             'url' => $url,
         ];
     }

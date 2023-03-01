@@ -2,39 +2,20 @@
 
 namespace App\Rules;
 
-use Illuminate\Contracts\Validation\Rule;
+use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
 
-class PhoneNumberValidationRule implements Rule
+class PhoneNumberValidationRule implements ValidationRule
 {
     /**
-     * Create a new rule instance.
+     * Run the validation rule.
      *
-     * @return void
+     * @param  \Closure(string): \Illuminate\Translation\PotentiallyTranslatedString  $fail
      */
-    public function __construct()
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        //
-    }
-
-    /**
-     * Determine if the validation rule passes.
-     *
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @return bool
-     */
-    public function passes($attribute, $value)
-    {
-        return preg_match("/^(?:\(?\+?48)?(?:[-\.\(\)\s]*(\d)){9}\)?$/", $value);
-    }
-
-    /**
-     * Get the validation error message.
-     *
-     * @return string
-     */
-    public function message()
-    {
-        return 'Nieprawidłowy format numeru telefonu.';
+        if (!preg_match("/^(?:\(?\+?48)?(?:[-\.\(\)\s]*(\d)){9}\)?$/", $value)) {
+            $fail('Nieprawidłowy format numeru telefonu.');
+        }
     }
 }

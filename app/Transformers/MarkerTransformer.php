@@ -2,8 +2,8 @@
 
 namespace App\Transformers;
 
-use League\Fractal\TransformerAbstract;
 use App\Models\Marker;
+use League\Fractal\TransformerAbstract;
 
 class MarkerTransformer extends TransformerAbstract
 {
@@ -12,19 +12,19 @@ class MarkerTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $defaultIncludes = [
+    protected array $defaultIncludes = [
         'marker_media',
     ];
-
+    
     /**
      * List of resources possible to include
      *
      * @var array
      */
-    protected $availableIncludes = [
+    protected array $availableIncludes = [
         //
     ];
-
+    
     /**
      * A Fractal transformer.
      *
@@ -49,8 +49,6 @@ class MarkerTransformer extends TransformerAbstract
 
     public function includeMarkerMedia(Marker $marker)
     {
-        $markerMedia = $marker->markerMedia()->get();
-
-        return $this->collection($markerMedia, new MarkerMediaTransformer);
+        return $this->collection($marker->markerMedia, new MarkerMediaTransformer);
     }
 }
