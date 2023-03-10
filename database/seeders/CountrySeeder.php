@@ -1,18 +1,20 @@
 <?php
 
+namespace Database\Seeders;
+
+use DB;
 use Illuminate\Database\Seeder;
+use Ramsey\Uuid\Uuid;
 
 class CountrySeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         $countryId = DB::table('countries')->insertGetId([
-            'currency_id' => 1,
+            'id' => Uuid::uuid4(),
             'iso_code' => 'PL',
             'call_prefix' => 48,
             'active' => true,
@@ -22,6 +24,7 @@ class CountrySeeder extends Seeder
             'updated_at' => date('Y-m-d H:i:s'),
         ]);
         DB::table('country_langs')->insert([
+            'id' => Uuid::uuid4(),
             'country_id' => $countryId,
             'lang_id' => 1,
             'name' => 'Polska',

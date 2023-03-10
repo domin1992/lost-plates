@@ -7,27 +7,44 @@
 
         <title>Zgubione/znalezione tablice rejestracyjne</title>
 
-        <link rel="stylesheet" href="/css/front.css">
+        @vite(['resources/scss/front/master.scss'])
 
-        <!-- Google Tag Manager -->
-        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','{{ env('GOOGLE_TAG_MANAGER') }}');</script>
-        <!-- End Google Tag Manager -->
+        <link rel="preload" href="{{ Vite::asset('resources/fonts/BowlbyOneSC-Regular.ttf') }}" as="font" crossorigin="*">
+        <link rel="preload" href="{{ Vite::asset('resources/fonts/Montserrat-Regular.ttf') }}" as="font" crossorigin="*">
+        <link rel="preload" href="{{ Vite::asset('resources/fonts/Montserrat-Bold.ttf') }}" as="font" crossorigin="*">
+
+        @if (app()->isProduction())
+            <!-- Google Tag Manager -->
+            <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','{{ config('services.google.tag_manager_container_id') }}');</script>
+            <!-- End Google Tag Manager -->
+        @endif
     </head>
     <body class=" @yield('body-class') ">
-        <!-- Google Tag Manager (noscript) -->
-        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ env('GOOGLE_TAG_MANAGER') }}"
-        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-        <!-- End Google Tag Manager (noscript) -->
-        <div id="lost-plates" class="wrapper">
+        @if (app()->isProduction())
+            <!-- Google Tag Manager (noscript) -->
+            <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ config('services.google.tag_manager_container_id') }}"
+            height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+            <!-- End Google Tag Manager (noscript) -->
+        @endif
+        <div id="lost-plates" class="lost-plates min-h-screen flex flex-col">
+            @include('front.partials.header')
+            @include('front.partials.sidebar')
+
             @yield('content')
+
+            <gallery-preview></gallery-preview>
         </div>
 
-        <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_API_KEY') }}&callback=app.initMap" defer async></script>
-        <script src="/js/front.js"></script>
+        <script>
+            window.globals = {
+                googleCloudApiKey: '{{ config('services.google.cloud_api_key') }}',
+            };
+        </script>
+        @vite(['resources/js/front/master.js'])
         @yield('scripts')
     </body>
 </html>

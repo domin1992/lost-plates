@@ -15,6 +15,10 @@ class MarkerMedia extends Model
         'media_id',
     ];
 
+    protected $with = [
+        'media',
+    ];
+
     public function marker()
     {
         return $this->belongsTo(Marker::class, 'marker_id', 'id');

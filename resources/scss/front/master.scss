@@ -1,4 +1,76 @@
-@import '~bootstrap/scss/bootstrap';
+@charset 'UTF-8';
+
+@import '~@splidejs/splide/dist/css/splide.min.css';
+@import '~toastify-js/src/toastify.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    @font-face {
+        font-family: Bowlby One SC;
+        font-weight: 400;
+        src: url(../../fonts/BowlbyOneSC-Regular.ttf) format("truetype");
+    }
+    @font-face {
+        font-family: Montserrat;
+        font-weight: 400;
+        src: url(../../fonts/Montserrat-Regular.ttf) format("truetype");
+    }
+    @font-face {
+        font-family: Montserrat;
+        font-weight: 700;
+        src: url(../../fonts/Montserrat-Bold.ttf) format("truetype");
+    }
+}
+
+.logo{
+    background: -webkit-linear-gradient(45deg, theme('colors.cyan'), theme('colors.purple-heart'));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.splide {
+    &__arrow {
+        svg {
+            filter: drop-shadow(0 0 3px rgb(0 0 0 / 0.4));
+
+            path {
+                fill: theme('colors.white');
+            }
+        }
+    }
+}
+
+.form-check-input {
+    &:checked {
+        background-color: theme('colors.cyan');
+        border-color: theme('colors.cyan');
+
+        &[type=checkbox]{
+            background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e")
+        }
+
+        &[type=radio]{
+            background-image:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%22-4 -4 8 8%22%3E%3Ccircle r=%222%22 fill=%22%23fff%22/%3E%3C/svg%3E")
+        }
+    }
+
+    &[type=checkbox]:indeterminate{
+        background-color:#0d6efd;
+        border-color:#0d6efd;
+        background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10h8'/%3e%3c/svg%3e")
+    }
+
+    &:disabled{
+        pointer-events:none;
+        filter:none;
+        opacity:.5
+    }
+}
+
+/*@import '~bootstrap/scss/bootstrap';
 @import '~@fortawesome/fontawesome-free/scss/fontawesome';
 @import '~@fortawesome/fontawesome-free/scss/brands';
 @import '~@fortawesome/fontawesome-free/scss/regular';
@@ -15,16 +87,7 @@ $secondary-color: #5e48cd;
     background-color: transparent;
 }
 
-.logo{
-    font-family: 'Bowlby One SC', cursive;
-    text-align: center;
-    margin: 0;
-    display: inline-block;
-    text-transform: uppercase;
-    background: -webkit-linear-gradient(45deg, $primary-color, $secondary-color);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
+
 
 .map-wrapper{
     display: flex;
@@ -180,3 +243,4 @@ $secondary-color: #5e48cd;
         }
     }
 }
+*/

@@ -2,6 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\Marker;
+use App\Models\MarkerMedia;
+use App\Models\Media;
+use App\Observers\MarkerMediaObserver;
+use App\Observers\MarkerObserver;
+use App\Observers\MediaObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -18,6 +24,12 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+    ];
+
+    protected $observers = [
+        MarkerMedia::class => MarkerMediaObserver::class,
+        Marker::class => MarkerObserver::class,
+        Media::class => MediaObserver::class,
     ];
 
     /**

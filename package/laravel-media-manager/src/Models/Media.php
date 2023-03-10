@@ -2,12 +2,12 @@
 
 namespace Zencoreitservices\MediaManager\Models;
 
-use App\Jobs\MediaResizeMissingJob;
 use App\Jobs\MediaResizeAllJob;
+use App\Jobs\MediaResizeMissingJob;
+use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Model;
 use Storage;
 use Str;
-use GuzzleHttp\Client;
 
 class Media extends Model
 {
@@ -46,15 +46,15 @@ class Media extends Model
         $media = self::createObject($extension, $type, $imageType, $userId);
 
         if ($type == 'image') {
-            if (!$imageType) {
+            if (! $imageType) {
                 throw new \Exception('Image type is required');
             }
 
-            if (!isset(config('media-manager.image-types')[$imageType])) {
+            if (! isset(config('media-manager.image-types')[$imageType])) {
                 throw new \Exception('Image type is not defined in config');
             }
 
-            $storage->makeDirectory($type . '/' . $imageType);
+            $storage->makeDirectory($type.'/'.$imageType);
             $storage->putFileAs(
                 sprintf('%s/%s', $type, $imageType),
                 $file,
@@ -93,10 +93,10 @@ class Media extends Model
         $fileSize = getimagesize($url);
         $extension = str_replace('.', '', image_type_to_extension($fileSize[2]));
 
-        $filePath = storage_path('app/tmp/downloadedFile.' . $extension);
+        $filePath = storage_path('app/tmp/downloadedFile.'.$extension);
 
         $client = new Client([
-            'timeout'  => 10.0,
+            'timeout' => 10.0,
             'verify' => false,
         ]);
 
@@ -124,7 +124,7 @@ class Media extends Model
             $name = $this->name;
 
             if ($imageSize) {
-                $name .= '_' . $imageSize;
+                $name .= '_'.$imageSize;
             }
 
             return sprintf(
@@ -168,7 +168,7 @@ class Media extends Model
                 return $storage->url($this->getFilePath($imageSize));
             }
         }
-        
+
         if ($this->fileExists()) {
             return $storage->url($this->getFilePath());
         }
@@ -210,8 +210,8 @@ class Media extends Model
             $imageProcessorClass = config('media-manager.classes.image-processor');
             $imageProcessor = new $imageProcessorClass($originalFilePath);
 
-            foreach (config('media-manager.image-types.' . $this->image_type) as $imageSizeSlug => $imageSize) {
-                if (!$this->fileExists($imageSizeSlug)) {
+            foreach (config('media-manager.image-types.'.$this->image_type) as $imageSizeSlug => $imageSize) {
+                if (! $this->fileExists($imageSizeSlug)) {
                     $imageProcessor
                         ->resize(
                             $imageSize['width'] ?? null,
@@ -219,7 +219,7 @@ class Media extends Model
                             $imageSize['fit']
                         )
                         ->save($storage->path($this->getFilePath($imageSizeSlug)));
-                    
+
                     $imageProcessor->newImage($originalFilePath);
                 }
             }
@@ -235,7 +235,7 @@ class Media extends Model
             $imageProcessorClass = config('media-manager.classes.image-processor');
             $imageProcessor = new $imageProcessorClass($originalFilePath);
 
-            foreach (config('media-manager.image-types.' . $this->image_type) as $imageSizeSlug => $imageSize) {
+            foreach (config('media-manager.image-types.'.$this->image_type) as $imageSizeSlug => $imageSize) {
                 $imageProcessor
                     ->resize(
                         $imageSize['width'] ?? null,
@@ -261,7 +261,7 @@ class Media extends Model
                 ['type', '=', 'image'],
             ])->get();
         }
-        
+
         foreach ($media as $mediaItem) {
             MediaResizeMissingJob::dispatch($mediaItem);
         }
@@ -279,7 +279,7 @@ class Media extends Model
                 ['type', '=', 'image'],
             ])->get();
         }
-        
+
         foreach ($media as $mediaItem) {
             MediaResizeAllJob::dispatch($mediaItem);
         }
@@ -289,7 +289,7 @@ class Media extends Model
     {
         do {
             $name = Str::random(32);
-        } while( self::where('name', $name)->first() );
+        } while (self::where('name', $name)->first());
 
         return $name;
     }
@@ -318,15 +318,15 @@ class Media extends Model
         $extension = str_replace('.', '', image_type_to_extension($fileSize[2]));
 
         if ($type == 'image') {
-            if (!$imageType) {
+            if (! $imageType) {
                 throw new \Exception('Image type is required');
             }
 
-            if (!isset(config('media-manager.image-types')[$imageType])) {
+            if (! isset(config('media-manager.image-types')[$imageType])) {
                 throw new \Exception('Image type is not defined in config');
             }
 
-            $storage->makeDirectory($type . '/' . $imageType);
+            $storage->makeDirectory($type.'/'.$imageType);
             $storage->putFileAs(
                 sprintf('%s/%s', $type, $imageType),
                 $file,

@@ -12,14 +12,14 @@ class DeleteMediaWithNoFile extends Command
      * @var string
      */
     protected $signature = 'media-manager:delete-media-with-no-file';
- 
+
     /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Deletes media with no file.';
- 
+
     /**
      * Execute the console command.
      *
@@ -30,7 +30,7 @@ class DeleteMediaWithNoFile extends Command
     {
         $media = config('media-manager.classes.media')::take(50)->inRandomOrder()->get();
         foreach ($media as $mediaItem) {
-            if (!$mediaItem->fileExists()) {
+            if (! $mediaItem->fileExists()) {
                 $mediaItem->delete();
             }
         }

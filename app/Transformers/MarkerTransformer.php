@@ -9,22 +9,18 @@ class MarkerTransformer extends TransformerAbstract
 {
     /**
      * List of resources to automatically include
-     *
-     * @var array
      */
     protected array $defaultIncludes = [
         'marker_media',
     ];
-    
+
     /**
      * List of resources possible to include
-     *
-     * @var array
      */
     protected array $availableIncludes = [
         //
     ];
-    
+
     /**
      * A Fractal transformer.
      *
@@ -39,11 +35,13 @@ class MarkerTransformer extends TransformerAbstract
             'type' => $marker->type,
             'lat' => $marker->lat,
             'lng' => $marker->lng,
+            'formatted_address' => $marker->formatted_address,
+            'google_place_id' => $marker->google_place_id,
             'radius' => $marker->radius,
             'additional_info' => $marker->additional_info,
             'plate_number' => $plate->number,
             'phone_number' => $marker->hiddenPhoneNumber(),
-            'email' => $marker->hiddenEmail(),
+            'link' => $marker->link(),
         ];
     }
 

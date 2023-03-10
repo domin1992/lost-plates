@@ -2,12 +2,12 @@
 
 namespace Zencoreitservices\MediaManager\Processors;
 
-use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 
 class ImageProcessor
 {
     protected $imageManager;
+
     protected $image;
 
     public function __construct($path)
@@ -20,6 +20,7 @@ class ImageProcessor
     {
         unset($this->image);
         $this->image = $this->imageManager->make($path);
+
         return $this;
     }
 
@@ -98,8 +99,8 @@ class ImageProcessor
 
     public function crop($width, $height, $x, $y)
     {
-        $this->image->crop((int)$width, (int)$height, (int)$x, (int)$y);
-        
+        $this->image->crop((int) $width, (int) $height, (int) $x, (int) $y);
+
         return $this;
     }
 
@@ -110,6 +111,6 @@ class ImageProcessor
 
     protected function calcRatio($a, $b, $c)
     {
-        return (int)(($a * $b) / $c);
+        return (int) (($a * $b) / $c);
     }
 }

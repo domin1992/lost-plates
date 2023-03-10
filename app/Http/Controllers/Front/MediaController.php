@@ -3,27 +3,25 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Media;
 use App\Transformers\MediaTransformer;
 use Auth;
+use Illuminate\Http\Request;
 
 class MediaController extends Controller
 {
     public function ajaxStore(Request $request)
     {
-        $mediaModel = Media::addFromUpload(
-            ($request->file('media') != null ? $request->file('media') : $request->image),
-            $request->file_type,
-            $request->image_type,
-            (Auth::check() ? Auth::User()->id : null)
-        );
+        $request->validate([
+            'file' => 'required|file',
+            'type' => 'required|string',
+            'image_type' => 'required_if:type,image|string',
+        ]);
 
-        $media = fractal($mediaModel, new MediaTransformer)
-            ->toArray();
+        $media = Media::add($request->file('file'), $request->type, $request->image_type, auth()->check() ? auth()->user()->id : null);
 
         return response()->json([
-            'media' => $media
+            'media' => fractal($media, new MediaTransformer)->toArray(),
         ]);
     }
 
@@ -31,12 +29,12 @@ class MediaController extends Controller
     {
         $media = Media::findOrFail($id);
 
-        if(null == $media->user_id || (null != $media->user_id && Auth::check() && Auth::User()->id == $media->user_id)){
+        if (null == $media->user_id || (null != $media->user_id && Auth::check() && Auth::User()->id == $media->user_id)) {
             $media->delete();
         }
 
         return response()->json([
-            'success' => true
+            'success' => true,
         ]);
     }
 }

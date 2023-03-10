@@ -3,16 +3,16 @@
 namespace Zencoreitservices\MediaManager;
 
 use Illuminate\Support\ServiceProvider;
-use Zencoreitservices\MediaManager\Console\Commands\DeleteMediaWithNoFile;
 use Zencoreitservices\MediaManager\Console\Commands\DeleteFilesWithNoMedia;
+use Zencoreitservices\MediaManager\Console\Commands\DeleteMediaWithNoFile;
 
 class MediaManagerProvider extends ServiceProvider
 {
-/**
-    * Bootstrap any package services.
-    *
-    * @return void
-    */
+    /**
+     * Bootstrap any package services.
+     *
+     * @return void
+     */
     public function boot()
     {
         // Migrations

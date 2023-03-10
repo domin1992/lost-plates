@@ -9,6 +9,7 @@ class Tools
         $plateNumber = str_replace(' ', '', $plateNumber);
         $plateNumber = str_replace('-', '', $plateNumber);
         $plateNumber = strtoupper($plateNumber);
+
         return $plateNumber;
     }
 
@@ -16,6 +17,7 @@ class Tools
     {
         $phoneNumber = str_replace(' ', '', $phoneNumber);
         $phoneNumber = str_replace('-', '', $phoneNumber);
+
         return $phoneNumber;
     }
 }

@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('type');
             $table->decimal('lat', 11, 8);
             $table->decimal('lng', 11, 8);
+            $table->string('formatted_address')->nullable();
+            $table->string('google_place_id')->nullable();
             $table->decimal('radius', 20, 6)->nullable();
             $table->string('phone_number')->nullable();
             $table->string('email')->nullable();

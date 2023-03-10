@@ -9,10 +9,7 @@ class ArraySerializer extends ArraySerializerParent
     /**
      * Serialize a collection.
      *
-     * @param string $resourceKey
-     * @param array  $data
-     *
-     * @return array
+     * @param  string  $resourceKey
      */
     public function collection(?string $resourceKey, array $data): array
     {
