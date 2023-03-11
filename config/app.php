@@ -185,6 +185,7 @@ return [
         /*
          * Package Service Providers...
          */
+        Zencoreitservices\Translator\Providers\DeepLTranslatorProvider::class,
 
         /*
          * Application Service Providers...
