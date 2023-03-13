@@ -7,7 +7,7 @@ use App\Models\Marker;
 class MarkerObserver
 {
     /**
-     * Handle the Makrer "created" event.
+     * Handle the Marker "created" event.
      */
     public function created(Marker $marker): void
     {
@@ -15,7 +15,7 @@ class MarkerObserver
     }
 
     /**
-     * Handle the Makrer "updated" event.
+     * Handle the Marker "updated" event.
      */
     public function updated(Marker $marker): void
     {
@@ -23,7 +23,7 @@ class MarkerObserver
     }
 
     /**
-     * Handle the Makrer "deleted" event.
+     * Handle the Marker "deleted" event.
      */
     public function deleted(Marker $marker): void
     {
@@ -33,7 +33,7 @@ class MarkerObserver
     }
 
     /**
-     * Handle the Makrer "restored" event.
+     * Handle the Marker "restored" event.
      */
     public function restored(Marker $marker): void
     {
@@ -41,7 +41,7 @@ class MarkerObserver
     }
 
     /**
-     * Handle the Makrer "force deleted" event.
+     * Handle the Marker "force deleted" event.
      */
     public function forceDeleted(Marker $marker): void
     {

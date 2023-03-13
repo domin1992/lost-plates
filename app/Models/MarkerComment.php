@@ -6,14 +6,13 @@ use App\Models\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Language extends Model
+class MarkerComment extends Model
 {
     use HasFactory, Uuids;
 
     protected $fillable = [
+        'marker_id',
         'name',
-        'iso',
-        'date_format',
-        'datetime_format',
+        'content',
     ];
 }

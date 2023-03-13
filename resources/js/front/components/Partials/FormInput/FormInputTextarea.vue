@@ -7,6 +7,7 @@
                 :id="name"
                 :name="name"
                 :value="modelValue"
+                :placeholder="placeholder"
                 @input="$emit('update:modelValue', $event.target.value)"
             ></textarea>
         </div>
@@ -24,6 +25,7 @@ export default {
         errorMessage: [String, Array],
         required: Boolean,
         description: String,
+        placeholder: String,
     },
 }
 </script>

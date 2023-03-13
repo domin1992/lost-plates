@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\GeocodeMarker;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -14,6 +15,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('model:prune')->everyThreeHours();
         $schedule->command('zncr:translate')->everyHour();
+        $schedule->call(GeocodeMarker::class)->everyFifteenMinutes();
     }
 
     /**

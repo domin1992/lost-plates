@@ -3,29 +3,26 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\MarkerStoreRequest;
 use App\Models\Marker;
-use App\Rules\PhoneNumberValidationRule;
 use App\Services\MarkerService;
 use App\Transformers\MarkerTransformer;
 use Illuminate\Http\Request;
 
 class MarkersController extends Controller
 {
-    public function ajaxStore(MarkerService $markerService, Request $request)
+    public function index($type)
     {
-        $request->validate([
-            'type' => 'required|string|in:' . Marker::TYPE_FOUND . ',' . Marker::TYPE_LOST,
-            'plate_number' => 'required|string|min:3|max:191',
-            'lat' => 'required|numeric',
-            'lng' => 'required|numeric',
-            'phone_number' => ['nullable', 'string', 'max:191', new PhoneNumberValidationRule],
-            'email' => 'nullable|email|max:191',
-            'radius' => 'nullable|numeric',
-            'additional_info' => 'nullable|string',
-            'media' => 'nullable|array|max:5',
-            'media.*' => 'nullable|string|exists:media,id',
-        ]);
+        $markersCollection = Marker::where('type', $type)->paginate(15);
 
+        return view('front.markers.index', [
+            'markers' => fractal($markersCollection, new MarkerTransformer)->toArray(),
+            'type' => $type,
+        ]);
+    }
+
+    public function ajaxStore(MarkerService $markerService, MarkerStoreRequest $request)
+    {
         $markerService->store(
             $request->plate_number,
             $request->type,
@@ -63,10 +60,21 @@ class MarkersController extends Controller
             ]);
         }
 
-        $markersCollection = $markers
-            ->limit(50)
-            ->orderBy('created_at', 'desc')
-            ->get();
+        if ($request->has('type')) {
+            $markers = $markers->where('markers.type', $request->type);
+        }
+
+        if (!$request->has('paginate') && $request->paginate) {
+            $markersCollection = $markers
+                ->limit(50)
+                ->orderBy('markers.created_at', 'desc')
+                ->get();
+        } else {
+            $markersCollection = $markers
+                ->orderBy('markers.created_at', 'desc')
+                ->paginate(15);
+        }
+
         $markers = fractal($markersCollection, new MarkerTransformer)
             ->toArray();
 

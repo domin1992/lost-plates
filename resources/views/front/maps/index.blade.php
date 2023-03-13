@@ -4,5 +4,4 @@
 
 @section('content')
     <big-map></big-map>
-    {{-- <add-marker-form></add-marker-form> --}}
 @endsection

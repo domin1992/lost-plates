@@ -34,7 +34,9 @@
             @include('front.partials.header')
             @include('front.partials.sidebar')
 
-            @yield('content')
+            <div class="mt-14">
+                @yield('content')
+            </div>
 
             <gallery-preview></gallery-preview>
         </div>

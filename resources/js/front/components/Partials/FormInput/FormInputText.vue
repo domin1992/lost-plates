@@ -9,6 +9,7 @@
                 :id="name"
                 :name="name"
                 :value="modelValue"
+                :placeholder="placeholder"
                 @input="$emit('update:modelValue', $event.target.value)"
             >
             <span class="px-3 py-1.5 text-base leading-[1.4] border-t border-r border-b border-solid border-gray-300 bg-gray-300 rounded-r" v-if="suffix">{{ suffix }}</span>
@@ -29,6 +30,7 @@ export default {
         suffix: String,
         required: Boolean,
         description: String,
+        placeholder: String,
     },
 }
 </script>

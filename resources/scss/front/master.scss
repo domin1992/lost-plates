@@ -25,6 +25,10 @@
     }
 }
 
+* {
+    box-sizing: border-box;
+}
+
 .logo{
     background: -webkit-linear-gradient(45deg, theme('colors.cyan'), theme('colors.purple-heart'));
     -webkit-background-clip: text;
@@ -69,6 +73,21 @@
         opacity:.5
     }
 }
+
+.loader {
+    &::after {
+        border-color: theme('colors.cyan') transparent;
+    }
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+} 
 
 /*@import '~bootstrap/scss/bootstrap';
 @import '~@fortawesome/fontawesome-free/scss/fontawesome';

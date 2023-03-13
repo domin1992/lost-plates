@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Marker;
+use App\Models\MarkerComment;
 use App\Models\MarkerMedia;
 use App\Models\Media;
 use App\Models\Plate;
@@ -43,6 +44,15 @@ class MarkerSeeder extends Seeder
                             'media_id' => $media->id,
                         ]);
                     });
+
+                MarkerComment::factory()
+                    ->state(function (array $attribute) use ($marker) {
+                        return [
+                            'marker_id' => $marker->id,
+                        ];
+                    })
+                    ->count(rand(0, 20))
+                    ->create();
             });
     }
 }

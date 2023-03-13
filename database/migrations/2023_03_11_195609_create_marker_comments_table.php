@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('languages', function (Blueprint $table) {
+        Schema::create('marker_comments', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->uuid('marker_id');
             $table->string('name');
-            $table->string('iso');
-            $table->string('date_format')->default('Y-m-d');
-            $table->string('datetime_format')->default('Y-m-d H:i:s');
+            $table->longText('content');
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('languages');
+        Schema::dropIfExists('marker_comments');
     }
 };

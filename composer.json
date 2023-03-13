@@ -30,7 +30,10 @@
             "Database\\Seeders\\": "database/seeders/",
             "Zencoreitservices\\MediaManager\\": "package/laravel-media-manager/src/",
             "Zencoreitservices\\Translator\\": "package/laravel-deepl-translator/src/"
-        }
+        },
+        "files": [
+            "app/Libraries/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

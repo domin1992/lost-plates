@@ -3,9 +3,9 @@
 return [
     'translateFrom' => 'pl',
 
-    'translateTo' => [
-        'en',
-    ],
+    'translateTo' => activeLanguages()
+        ->filter(fn ($lang) => $lang !== 'pl')
+        ->toArray(),
 
     'limitTranslationsPerRun' => 50,
 

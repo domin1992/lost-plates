@@ -1,5 +1,5 @@
 <template>
-    <div class="map-wrapper mt-14">
+    <div class="map-wrapper">
         <Alert
             message="Kliknij na mapie, aby dodać pineskę."
             type="info"
@@ -13,6 +13,7 @@
         <MapDetails
             :activeMarker="activeMarker"
             @detailsHidden="() => {closeInfoWindow(); activeMarker = null;}"
+            @refreshMarker="refreshMarker"
         />
 
         <button class="fixed bottom-4 right-4 w-16 h-16 rounded-full bg-purple-heart flex justify-center items-center hover:bg-cyan focus:bg-cyan transition-colors" @click="triggerSeach">
@@ -263,6 +264,24 @@ export default {
         },
         shouldShowAlert() {
             return !Cookies.get('bigMapAlertClosed');
+        },
+        refreshMarker(params) {
+            axios.get(`/ajax/markers/${params.markerId}`)
+                .then((response) => {
+                    this.markers = this.markers.map((marker) => {
+                        if (marker.id == params.markerId) {
+                            marker = response.data.marker;
+                        }
+
+                        return marker;
+                    });
+
+                    this.setMarkersOnMap();
+
+                    if (this.activeMarker && this.activeMarker.id == params.markerId) {
+                        this.activeMarker = response.data.marker;
+                    }
+                });
         },
     },
 }

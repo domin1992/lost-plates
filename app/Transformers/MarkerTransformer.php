@@ -12,6 +12,7 @@ class MarkerTransformer extends TransformerAbstract
      */
     protected array $defaultIncludes = [
         'marker_media',
+        'marker_comments',
     ];
 
     /**
@@ -48,5 +49,10 @@ class MarkerTransformer extends TransformerAbstract
     public function includeMarkerMedia(Marker $marker)
     {
         return $this->collection($marker->markerMedia, new MarkerMediaTransformer);
+    }
+
+    public function includeMarkerComments(Marker $marker)
+    {
+        return $this->collection($marker->markerComments, new MarkerCommentTransformer);
     }
 }

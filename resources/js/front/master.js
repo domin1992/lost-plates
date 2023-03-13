@@ -70,7 +70,8 @@ app.config.globalProperties.emitter = mitt();
 
 app
     .component('BigMap', defineAsyncComponent(() => import("./components/Map/BigMap.vue")))
-    .component('GalleryPreview', defineAsyncComponent(() => import("./components/GalleryPreview.vue")));
+    .component('GalleryPreview', defineAsyncComponent(() => import("./components/GalleryPreview.vue")))
+    .component('MarkersList', defineAsyncComponent(() => import("./components/Marker/MarkersList.vue")));
 
 app.mount('#lost-plates');
 

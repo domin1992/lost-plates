@@ -30,6 +30,7 @@ class Marker extends Model
 
     protected $with = [
         'markerMedia',
+        'markerComments',
     ];
 
     public function plate()
@@ -40,6 +41,11 @@ class Marker extends Model
     public function markerMedia()
     {
         return $this->hasMany(MarkerMedia::class);
+    }
+
+    public function markerComments()
+    {
+        return $this->hasMany(MarkerComment::class);
     }
 
     public function hiddenPhoneNumber()
@@ -63,7 +69,7 @@ class Marker extends Model
 
     public function link()
     {
-        return route('markers.show', [
+        return route('front.markers.show', [
             'type' => $this->type,
             'plateNumber' => $this->plate->number,
         ]);
