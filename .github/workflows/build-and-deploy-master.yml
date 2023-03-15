@@ -1,0 +1,52 @@
+name: Build and deploy master
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
+        with:
+          php-version: '8.1'
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install composer packages
+        run: composer install --prefer-dist --no-progress
+
+      - name: Install npm packages
+        run: npm ci
+
+      - name: Build npm
+        run: npm run prod
+
+      - name: Compress builds
+        run: zip -r build.zip public/build
+
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ vars.SSH_PRIVATE_KEY }}
+          known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
+
+      - name: Adding known hosts
+        run: ssh-keyscan -p ${{ vars.SSH_PORT }} ${{ vars.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy
+        run: ssh -p ${{ vars.SSH_PORT }} -o StrictHostKeyChecking=no ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} "cd ${{ vars.SSH_PATH }}; git pull;"
+
+      - name: Upload build
+        run: scp -P ${{ vars.SSH_PORT }} -o StrictHostKeyChecking=no build.zip ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }}:${{ vars.SSH_PATH }}
+      
+      - name: Unzip build
+        run: ssh -p ${{ vars.SSH_PORT }} -o StrictHostKeyChecking=no ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} "cd ${{ vars.SSH_PATH }}; unzip -o build.zip; rm build.zip;"
+
+      - name: Update
+        run: ssh -p ${{ vars.SSH_PORT }} -o StrictHostKeyChecking=no ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} "cd ${{ vars.SSH_PATH }}; composer install --no-dev --prefer-dist --no-progress; php artisan migrate --force;"
+      
