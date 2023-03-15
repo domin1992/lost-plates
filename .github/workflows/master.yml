@@ -26,19 +26,6 @@ jobs:
       - name: Compress builds
         run: zip -r build.zip public/build
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: build
-          path: build.zip
-
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
-        with:
-          php-version: '8.1'
-
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
@@ -56,3 +43,4 @@ jobs:
       
       - name: Unzip build
         run: ssh -p ${{ vars.SSH_PORT }} -o StrictHostKeyChecking=no ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} "cd ${{ vars.SSH_PATH }}; unzip -o build.zip; rm build.zip;"
+      
