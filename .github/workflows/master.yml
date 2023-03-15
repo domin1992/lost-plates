@@ -1,14 +1,19 @@
 name: Master
 
+on: push
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Install composer packages
-        run: composer install --prefer-dist --no-progress
+      - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
+        with:
+          php-version: '8.1'
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
 
-      - name: Install npm packages
-        run: npm ci
-
-      - name: Build assets
-        run: npm run prod
+      - run: composer install --prefer-dist --no-progress
+      - run: npm ci
+      - run: npm run prod
