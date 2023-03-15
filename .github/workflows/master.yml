@@ -1,0 +1,14 @@
+name: Master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install composer packages
+        run: composer install --prefer-dist --no-progress
+
+      - name: Install npm packages
+        run: npm ci
+
+      - name: Build assets
+        run: npm run prod
