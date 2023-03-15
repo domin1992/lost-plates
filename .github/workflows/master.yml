@@ -31,3 +31,6 @@ jobs:
 
       - name: Adding known hosts
         run: ssh-keyscan -p ${{ vars.SSH_PORT }} ${{ vars.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy
+        run: ssh -p ${{ vars.SSH_PORT }} -o StrictHostKeyChecking=no ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} "cd ${{ vars.SSH_PATH }}; git pull;"
