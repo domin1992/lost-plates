@@ -30,4 +30,4 @@ jobs:
           known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
 
       - name: Adding known hosts
-        run: echo $SSH_PORT; echo "|"; echo ${{ env.SSH_PORT }}; echo "|"; echo ${{ secrets.SSH_PORT }};
+        run: echo $SSH_TEST; echo "|"; echo ${{ env.SSH_TEST }}; echo "|"; echo ${{ secrets.SSH_TEST }}; echo "|"; echo ${{ vars.SSH_TEST }};
