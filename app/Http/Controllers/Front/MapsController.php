@@ -7,7 +7,7 @@ use Illuminate\View\View;
 
 class MapsController extends Controller
 {
-    public function index(): View
+    public function index(string $lang): View
     {
         return view('front.maps.index');
     }

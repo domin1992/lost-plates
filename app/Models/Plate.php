@@ -22,6 +22,7 @@ class Plate extends Model
     public function link(): string
     {
         return route('front.plates.show', [
+            'lang' => app()->getLocale(),
             'number' => $this->number,
         ]);
     }

@@ -1,6 +1,6 @@
 <header class="py-4 bg-white fixed z-40 w-full top-0 left-0 shadow-lg">
     <div class="px-4 flex justify-between">
-        <a href="{{ route('front.maps.index') }}" class="logo font-display uppercase inline-block">
+        <a href="{{ route('front.maps.index', ['lang' => app()->getLocale()]) }}" class="logo font-display uppercase inline-block">
             Lost plates
         </a>
 

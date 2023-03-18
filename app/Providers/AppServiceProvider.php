@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\Front\MarkersController;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 

@@ -44,6 +44,7 @@
         <script>
             window.globals = {
                 googleCloudApiKey: '{{ config('services.google.cloud_api_key') }}',
+                locale: '{{ app()->getLocale() }}',
             };
         </script>
         @vite(['resources/js/front/master.js'])

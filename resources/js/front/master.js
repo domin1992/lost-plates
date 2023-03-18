@@ -5,6 +5,7 @@ import Toastify from 'toastify-js';
 
 window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common['X-Requested-Locale'] = window.globals.locale;
 
 const app = window.app = createApp({
     methods: {

@@ -10,6 +10,7 @@ use App\Models\Marker;
 use App\Services\MarkerService;
 use App\Transformers\MarkerTransformer;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
@@ -17,7 +18,7 @@ use Illuminate\View\View;
 
 class MarkersController extends Controller
 {
-    public function index(string $type): View
+    public function index(string $lang, string $type): View
     {
         $markersCollection = Marker::where('type', $type)->paginate(15);
 
@@ -27,9 +28,13 @@ class MarkersController extends Controller
         ]);
     }
 
-    public function show(string $type, string $id): View
+    public function show(string $lang, string $type, string $id): View | RedirectResponse
     {
-        $markerModel = Marker::findOrFail($id);
+        $markerModel = Marker::find($id);
+
+        if (!$markerModel) {
+            return redirect()->route('front.markers.index', ['type' => $type]);
+        }
 
         if ($markerModel->type !== $type) {
             return redirect($markerModel->link());

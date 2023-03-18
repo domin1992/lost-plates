@@ -13,9 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-require('front/native.php');
-
-Route::prefix('{lang?}')->group(function () {
+Route::prefix('{lang}')->group(function () {
     require('front/native.php');
 })->where('lang', implode('|', activeLanguages()->toArray()));
 

@@ -5,13 +5,13 @@
 
     <ul class="mt-8">
         <li>
-            <a href="{{ route('front.maps.index') }}">Mapa</a>
+            <a href="{{ route('front.maps.index', ['lang' => app()->getLocale()]) }}">Mapa</a>
         </li>
         <li>
-            <a href="{{ route('front.markers.index', ['type' => \App\Models\Marker::TYPE_LOST]) }}">Lista zgubionych</a>
+            <a href="{{ route('front.markers.index', ['lang' => app()->getLocale(), 'type' => \App\Models\Marker::TYPE_LOST]) }}">Lista zgubionych</a>
         </li>
         <li>
-            <a href="{{ route('front.markers.index', ['type' => \App\Models\Marker::TYPE_FOUND]) }}">Lista znalezionych</a>
+            <a href="{{ route('front.markers.index', ['lang' => app()->getLocale(), 'type' => \App\Models\Marker::TYPE_FOUND]) }}">Lista znalezionych</a>
         </li>
     </ul>
 </aside>

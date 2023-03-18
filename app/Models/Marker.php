@@ -6,6 +6,7 @@ use App\Models\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Session;
 
 class Marker extends Model
 {
@@ -73,6 +74,7 @@ class Marker extends Model
     public function link(): string
     {
         return route('front.markers.show', [
+            'lang' => app()->getLocale(),
             'type' => $this->type,
             'id' => $this->id,
         ]);
