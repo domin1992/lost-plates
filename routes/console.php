@@ -17,3 +17,8 @@ use Illuminate\Support\Facades\Artisan;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
+
+Artisan::command('test-mail {email}', function ($email) {
+    Mail::to($email)->send(new \App\Mail\Test);
+    Mail::to($email)->queue(new \App\Mail\Test);
+});
