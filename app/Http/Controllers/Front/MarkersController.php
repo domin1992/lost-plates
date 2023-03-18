@@ -12,6 +12,7 @@ use App\Transformers\MarkerTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
@@ -48,7 +49,7 @@ class MarkersController extends Controller
 
     public function ajaxStore(MarkerService $markerService, MarkerStoreRequest $request): JsonResponse
     {
-        $markerService->store(
+        $marker = $markerService->store(
             $request->plate_number,
             $request->type,
             (float)$request->lat,
@@ -60,6 +61,10 @@ class MarkersController extends Controller
             $request->additional_info,
             $request->notify_when_found === 'on'
         );
+
+        if (app()->isProduction()) {
+            \Log::channel('slack')->info('New marker stored: ' . $marker->link());
+        }
 
         return response()->json([
             'message' => 'Pineska została dodana do mapy.',
