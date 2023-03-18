@@ -6,11 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Media;
 use App\Transformers\MediaTransformer;
 use Auth;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class MediaController extends Controller
 {
-    public function ajaxStore(Request $request)
+    public function ajaxStore(Request $request): JsonResponse
     {
         $request->validate([
             'file' => 'required|file',
@@ -25,7 +26,7 @@ class MediaController extends Controller
         ]);
     }
 
-    public function ajaxDestroy(Request $request, $id)
+    public function ajaxDestroy(string $id): JsonResponse
     {
         $media = Media::findOrFail($id);
 

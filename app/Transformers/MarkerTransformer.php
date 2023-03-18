@@ -13,6 +13,7 @@ class MarkerTransformer extends TransformerAbstract
     protected array $defaultIncludes = [
         'marker_media',
         'marker_comments',
+        'plate',
     ];
 
     /**
@@ -37,12 +38,15 @@ class MarkerTransformer extends TransformerAbstract
             'lat' => $marker->lat,
             'lng' => $marker->lng,
             'formatted_address' => $marker->formatted_address,
+            'google_maps_link' => $marker->googleMapsLink(),
             'google_place_id' => $marker->google_place_id,
             'radius' => $marker->radius,
             'additional_info' => $marker->additional_info,
             'plate_number' => $plate->number,
             'phone_number' => $marker->hiddenPhoneNumber(),
+            'has_email' => $marker->email,
             'link' => $marker->link(),
+            'created_at_for_humans' => $marker->created_at->diffForHumans(),
         ];
     }
 
@@ -54,5 +58,10 @@ class MarkerTransformer extends TransformerAbstract
     public function includeMarkerComments(Marker $marker)
     {
         return $this->collection($marker->markerComments, new MarkerCommentTransformer);
+    }
+
+    public function includePlate(Marker $marker)
+    {
+        return $this->item($marker->plate, new PlateTransformer);
     }
 }

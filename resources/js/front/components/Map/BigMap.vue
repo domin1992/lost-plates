@@ -3,7 +3,7 @@
         <Alert
             message="Kliknij na mapie, aby dodać pineskę."
             type="info"
-            customClasses="absolute top-12 left-0 right-0 w-5/6 z-10"
+            customClasses="absolute top-12 left-0 right-0 w-5/6 z-10 mt-28"
             @closed="alertClosed"
             v-if="shouldShowAlert()"
         />
@@ -182,7 +182,7 @@ export default {
         setMarkersOnMap() {
             this.mapMarkers = [];
 
-            this.markers.map((marker) => {
+            this.filteredMarkers.map((marker) => {
                 const _marker = new google.maps.Marker({
                     position: {
                         lat: parseFloat(marker.lat),
@@ -211,7 +211,7 @@ export default {
             if (this.activeMarker && this.activeMarker.id == markerId) {
                 this.activeMarker.id = 0;
             } else {
-                this.activeMarker = this.markers.find((marker) => marker.id == markerId);
+                this.activeMarker = this.filteredMarkers.find((marker) => marker.id == markerId);
                 this.infoWindow = new google.maps.InfoWindow({
                     content:
                         `<div class="text-center">
@@ -245,7 +245,7 @@ export default {
             this.markers = markers;
             this.setMarkersOnMap();
 
-            if (this.markers.length > 1) {
+            if (this.filteredMarkers.length > 1) {
                 const bounds = new google.maps.LatLngBounds();
 
                 markers.map((marker) => bounds.extend(new google.maps.LatLng(marker.lat, marker.lng))),
@@ -253,8 +253,8 @@ export default {
                 this.map.fitBounds(bounds);
             } else {
                 this.map.setCenter({
-                    lat: parseFloat(this.markers[0].lat),
-                    lng: parseFloat(this.markers[0].lng),
+                    lat: parseFloat(this.filteredMarkers[0].lat),
+                    lng: parseFloat(this.filteredMarkers[0].lng),
                 });
                 this.map.setZoom(16);
             }
@@ -268,13 +268,14 @@ export default {
         refreshMarker(params) {
             axios.get(`/ajax/markers/${params.markerId}`)
                 .then((response) => {
-                    this.markers = this.markers.map((marker) => {
-                        if (marker.id == params.markerId) {
-                            marker = response.data.marker;
-                        }
+                    this.markers = Object.entries(toRaw(this.markers))
+                        .map((entry) => {
+                            if (entry[0] !== 'meta') {
+                                entry[1] = response.data.marker;
+                            }
 
-                        return marker;
-                    });
+                            return entry;    
+                        });
 
                     this.setMarkersOnMap();
 
@@ -282,6 +283,13 @@ export default {
                         this.activeMarker = response.data.marker;
                     }
                 });
+        },
+    },
+    computed: {
+        filteredMarkers() {
+            return Object.entries(toRaw(this.markers))
+                .filter((entry) => entry[0] !== 'meta')
+                .map((entry) => entry[1]);
         },
     },
 }

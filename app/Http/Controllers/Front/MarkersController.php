@@ -4,14 +4,20 @@ namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MarkerStoreRequest;
+use App\Http\Requests\MarkerSubmitContactRequest;
+use App\Mail\MarkerContact;
 use App\Models\Marker;
 use App\Services\MarkerService;
 use App\Transformers\MarkerTransformer;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
 
 class MarkersController extends Controller
 {
-    public function index($type)
+    public function index(string $type): View
     {
         $markersCollection = Marker::where('type', $type)->paginate(15);
 
@@ -21,7 +27,21 @@ class MarkersController extends Controller
         ]);
     }
 
-    public function ajaxStore(MarkerService $markerService, MarkerStoreRequest $request)
+    public function show(string $type, string $id): View
+    {
+        $markerModel = Marker::findOrFail($id);
+
+        if ($markerModel->type !== $type) {
+            return redirect($markerModel->link());
+        }
+
+        return view('front.markers.show', [
+            'marker' => fractal($markerModel, new MarkerTransformer)->toArray(),
+            'type' => $type,
+        ]);
+    }
+
+    public function ajaxStore(MarkerService $markerService, MarkerStoreRequest $request): JsonResponse
     {
         $markerService->store(
             $request->plate_number,
@@ -41,7 +61,7 @@ class MarkersController extends Controller
         ]);
     }
 
-    public function ajaxIndex(Request $request)
+    public function ajaxIndex(Request $request): JsonResponse
     {
         $markers = Marker::select('markers.*')
             ->join('plates', 'plates.id', '=', 'markers.plate_id');
@@ -83,7 +103,7 @@ class MarkersController extends Controller
         ]);
     }
 
-    public function ajaxShow(Request $request, $id)
+    public function ajaxShow(string $id): JsonResponse
     {
         $markerModel = Marker::findOrFail($id);
 
@@ -95,12 +115,30 @@ class MarkersController extends Controller
         ]);
     }
 
-    public function ajaxGetPhoneNumber(Request $request, $id)
+    public function ajaxGetPhoneNumber(string $id): JsonResponse
     {
         $marker = Marker::findOrFail($id);
 
         return response()->json([
             'phone_number' => $marker->formattedPhoneNumber(),
+        ]);
+    }
+
+    public function ajaxSubmitContact(MarkerSubmitContactRequest $request, string $id): JsonResponse
+    {
+        $marker = Marker::findOrFail($id);
+
+        if (!$marker->email) {
+            throw ValidationException::withMessages([
+                'constact' => 'Ten znacznik nie posiada adresu e-mail.',
+            ]);
+        }
+
+        Mail::to($marker->email)
+            ->queue(new MarkerContact($marker, $request->contact));
+
+        return response()->json([
+            'message' => 'Wiadomość została wysłana.',
         ]);
     }
 }

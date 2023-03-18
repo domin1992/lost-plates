@@ -71,7 +71,11 @@ app.config.globalProperties.emitter = mitt();
 app
     .component('BigMap', defineAsyncComponent(() => import("./components/Map/BigMap.vue")))
     .component('GalleryPreview', defineAsyncComponent(() => import("./components/GalleryPreview.vue")))
-    .component('MarkersList', defineAsyncComponent(() => import("./components/Marker/MarkersList.vue")));
+    .component('MarkersList', defineAsyncComponent(() => import("./components/Marker/MarkersList.vue")))
+    .component('MarkerComments', defineAsyncComponent(() => import("./components/Marker/MarkerComments.vue")))
+    .component('MiniMap', defineAsyncComponent(() => import("./components/Marker/MiniMap.vue")))
+    .component('RevealPhoneNumber', defineAsyncComponent(() => import("./components/Partials/RevealPhoneNumber.vue")))
+    .component('EmailContactForm', defineAsyncComponent(() => import("./components/Marker/EmailContactForm.vue")));
 
 app.mount('#lost-plates');
 

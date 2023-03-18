@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class MarkerMedia extends Model
 {
@@ -19,12 +20,12 @@ class MarkerMedia extends Model
         'media',
     ];
 
-    public function marker()
+    public function marker(): Relation
     {
         return $this->belongsTo(Marker::class, 'marker_id', 'id');
     }
 
-    public function media()
+    public function media(): Relation
     {
         return $this->belongsTo(Media::class, 'media_id', 'id');
     }

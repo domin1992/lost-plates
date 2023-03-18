@@ -13,4 +13,16 @@ class Plate extends Model
     protected $fillable = [
         'number',
     ];
+
+    public function markers()
+    {
+        return $this->hasMany(Marker::class);
+    }
+
+    public function link(): string
+    {
+        return route('front.plates.show', [
+            'number' => $this->number,
+        ]);
+    }
 }
