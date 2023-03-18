@@ -16,5 +16,5 @@ Route::get('{type}', [MarkersController::class, 'index'])
 Route::get('', [MapsController::class, 'index'])
     ->name('front.maps.index');
 
-Route::get('tablica/{number}', [PlatesController::class, 'show'])
+Route::get('plate/{number}', [PlatesController::class, 'show'])
     ->name('front.plates.show');

@@ -48,5 +48,5 @@ jobs:
         run: ssh -p ${{ vars.SSH_PORT }} -o StrictHostKeyChecking=no ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} "cd ${{ vars.SSH_PATH }}; unzip -o build.zip; rm build.zip;"
 
       - name: Update
-        run: ssh -p ${{ vars.SSH_PORT }} -o StrictHostKeyChecking=no ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} "cd ${{ vars.SSH_PATH }}; composer install --no-dev --prefer-dist --no-progress; php artisan migrate --force;"
+        run: ssh -p ${{ vars.SSH_PORT }} -o StrictHostKeyChecking=no ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} "cd ${{ vars.SSH_PATH }}; composer install --no-dev --prefer-dist --no-progress; php artisan optimize:clear; php artisan migrate --force;"
       
