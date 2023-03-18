@@ -50,7 +50,7 @@ class Marker extends Model
         return $this->hasMany(MarkerComment::class);
     }
 
-    public function hiddenPhoneNumber(): string
+    public function hiddenPhoneNumber(): ?string
     {
         if (null == $this->phone_number) {
             return null;
@@ -61,7 +61,7 @@ class Marker extends Model
         return $phoneNumber . 'xxxxxx';
     }
 
-    public function formattedPhoneNumber(): string
+    public function formattedPhoneNumber(): ?string
     {
         if (null == $this->phone_number) {
             return null;
