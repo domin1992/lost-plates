@@ -23,7 +23,7 @@ Artisan::command('test-mail {email}', function ($email) {
     \Mail::to($email)->queue(new \App\Mail\Test);
 });
 
-Artisan::command('monitor-queue-listener', function(){
+Artisan::command('monitor-queue-listener', function () {
     $run_command = false;
     if (file_exists(storage_path('app/queue.pid'))) {
         $pid = file_get_contents(storage_path('app/queue.pid'));
@@ -42,10 +42,14 @@ Artisan::command('monitor-queue-listener', function(){
     }
 });
 
-Artisan::command('monitor-queue-reset', function(){
+Artisan::command('monitor-queue-reset', function () {
     if (file_exists(storage_path('app/queue.pid'))) {
         $pid = file_get_contents(storage_path('app/queue.pid'));
         exec("kill -9 $pid");
         @unlink(storage_path('app/queue.pid'));
     }
+});
+
+Artisan::command('test-slack-log', function () {
+    \Log::channel('slack')->info('Test notification log.');
 });
