@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('model:prune')->everyThreeHours();
-        $schedule->command('zncr:translate')->everyHour();
+        $schedule->command('zncr:translate')->hourly();
         $schedule->call(GeocodeMarker::class)->everyFifteenMinutes();
         $schedule->call(GenerateSitemap::class)->daily();
         $schedule->command('monitor-queue-listener')->everyFiveMinutes();
