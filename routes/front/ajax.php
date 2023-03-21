@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Front\MarkersController;
 use App\Http\Controllers\Front\MediaController;
-use App\Http\Controllers\MarkerCommentsController;
+use App\Http\Controllers\Front\MarkerCommentsController;
 
 Route::prefix('ajax')->group(function () {
     Route::get('/markers', [MarkersController::class, 'ajaxIndex'])->name('front.ajax.markers.index');
