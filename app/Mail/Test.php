@@ -14,10 +14,13 @@ class Test extends Mailable
 {
     use Queueable, SerializesModels;
 
+    const INSTANT = 'instant';
+    const QUEUE = 'queue';
+
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct(private string $type = self::INSTANT)
     {
         //
     }
@@ -28,7 +31,7 @@ class Test extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Test wiadomości',
+            subject: 'Test wiadomości (' . $this->type . ')'
         );
     }
 

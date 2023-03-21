@@ -19,8 +19,8 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Artisan::command('test-mail {email}', function ($email) {
-    \Mail::to($email)->send(new \App\Mail\Test);
-    \Mail::to($email)->queue(new \App\Mail\Test);
+    \Mail::to($email)->send(new \App\Mail\Test(\App\Mail\Test::INSTANT));
+    \Mail::to($email)->queue(new \App\Mail\Test(\App\Mail\Test::QUEUE));
 });
 
 Artisan::command('monitor-queue-listener', function () {

@@ -23,9 +23,11 @@ class DatabaseSeeder extends Seeder
 
     public function removeMedia($dir)
     {
-        foreach (scandir($dir) as $file) {
-            if (!in_array($file, ['.', '..'])) {
-                unlink($dir . '/' . $file);
+        if (file_exists($dir)) {
+            foreach (scandir($dir) as $file) {
+                if (!in_array($file, ['.', '..'])) {
+                    unlink($dir . '/' . $file);
+                }
             }
         }
     }

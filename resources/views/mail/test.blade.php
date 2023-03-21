@@ -3,7 +3,7 @@
 
 Test wiadomości email
 
-@component('mail::button', ['url' => route('front.maps.index')])
+@component('mail::button', ['url' => route('front.maps.index', ['lang' => defaultLanguage()])])
 Przejdź do strony
 @endcomponent
 

@@ -326,7 +326,10 @@ class Media extends Model
                 throw new \Exception('Image type is not defined in config');
             }
 
-            $storage->makeDirectory($type.'/'.$imageType);
+            if (!file_exists(storage_path('app/public/' . $type . '/' . $imageType))) {
+                mkdir(storage_path('app/public/' . $type . '/' . $imageType), 0775, true);
+            }
+
             $storage->putFileAs(
                 sprintf('%s/%s', $type, $imageType),
                 $file,
