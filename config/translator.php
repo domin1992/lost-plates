@@ -9,5 +9,7 @@ return [
 
     'limitTranslationsPerRun' => 50,
 
+    'filesFormat' => 'json',
+
     'deeplApiKey' => env('DEEPL_API_KEY'),
 ];

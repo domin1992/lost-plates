@@ -21,3 +21,4 @@ yarn-error.log
 !/lang/
 /lang/*
 !/lang/pl/
+!/lang/pl.json

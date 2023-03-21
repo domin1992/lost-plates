@@ -8,9 +8,13 @@ use Illuminate\Support\Arr;
 
 class TranslationProcessor
 {
+    CONST FILE_FORMAT_JSON = 'json';
+    CONST FILE_FORMAT_PHP = 'php';
+
     private ?Collection $filesCollection = null;
     private string $sourceLang;
     private array $targetLangs;
+    private string $filesFormat;
     private int $limitTranslationsPerRun = 0;
     private int $translationsDone = 0;
 
@@ -30,7 +34,44 @@ class TranslationProcessor
         $this->targetLangs = $targetLangs;
     }
 
+    public function setFilesFormat(string $filesFormat): void
+    {
+        if (!in_array($filesFormat, [self::FILE_FORMAT_JSON, self::FILE_FORMAT_PHP])) {
+            throw new \InvalidArgumentException('Invalid file format in translator config. Must be json or php.');
+        }
+
+        $this->filesFormat = $filesFormat;
+    }
+
     public function createMissingFiles(): void
+    {
+        if ($this->filesFormat === self::FILE_FORMAT_JSON) {
+            $this->createMissingFilesJson();
+        } else {
+            $this->createMissingFilesPhp();
+        }
+    }
+
+    private function createMissingFilesJson(): void
+    {
+        if (!file_exists(lang_path(sprintf('%s.json', $this->sourceLang)))) {
+            throw new \InvalidArgumentException('Source language file does not exist');
+        }
+
+        $sourceFileContent = json_decode(file_get_contents(lang_path(sprintf('%s.json', $this->sourceLang))), true);
+        foreach ($sourceFileContent as &$sourceFileContentItem) {
+            $sourceFileContentItem = '';
+        }
+
+        collect($this->targetLangs)
+            ->each(function ($lang) use ($sourceFileContent) {
+                if (!file_exists(lang_path(sprintf('%s.json', $lang)))) {
+                    file_put_contents(lang_path(sprintf('%s.json', $lang)), json_encode($sourceFileContent, JSON_PRETTY_PRINT));
+                }
+            });
+    }
+
+    private function createMissingFilesPhp(): void
     {
         if (!file_exists(lang_path($this->sourceLang))) {
             throw new \InvalidArgumentException('Source language folder does not exist');
@@ -95,6 +136,47 @@ class TranslationProcessor
     }
 
     public function manageMissingTranslations(): void
+    {
+        if ($this->filesFormat === self::FILE_FORMAT_JSON) {
+            $this->manageMissingTranslationsJson();
+        } else {
+            $this->manageMissingTranslationsPhp();
+        }
+    }
+
+    private function manageMissingTranslationsJson(): void
+    {
+        if (!file_exists(lang_path(sprintf('%s.json', $this->sourceLang)))) {
+            throw new \InvalidArgumentException('Source language file does not exist');
+        }
+
+        $sourceFileContent = json_decode(file_get_contents(lang_path(sprintf('%s.json', $this->sourceLang))), true);
+
+        collect($this->targetLangs)
+            ->each(function ($lang) use ($sourceFileContent) {
+                $targetFileContent = json_decode(file_get_contents(lang_path(sprintf('%s.json', $lang))), true);
+
+                foreach ($sourceFileContent as $key => $value) {
+                    if (!isset($targetFileContent[$key])) {
+                        $targetFileContent[$key] = '';
+                    }
+                }
+
+                foreach ($targetFileContent as $key => &$value) {
+                    if (!$value) {
+                        $value = $this->translate($sourceFileContent[$key], $lang);
+                    }
+                }
+
+                file_put_contents(lang_path(sprintf('%s.json', $lang)), json_encode($targetFileContent, JSON_PRETTY_PRINT));
+
+                if ($this->shouldStop()) {
+                    return false;
+                }
+            });
+    }
+
+    private function manageMissingTranslationsPhp(): void
     {
         if (!file_exists(lang_path($this->sourceLang))) {
             throw new \InvalidArgumentException('Source language folder does not exist');

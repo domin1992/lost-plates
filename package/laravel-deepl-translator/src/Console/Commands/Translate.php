@@ -28,6 +28,7 @@ class Translate extends Command
     {
         $translationProcessor->setSourceLang(config('translator.translateFrom'));
         $translationProcessor->setTargetLangs(config('translator.translateTo'));
+        $translationProcessor->setFilesFormat(config('translator.filesFormat'));
 
         $this->info('Creating missing files...');
 
