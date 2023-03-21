@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('', fn () => redirect()->route('front.maps.index', ['lang' => defaultLanguage()]));
+
 Route::prefix('{lang}')->group(function () {
     require('front/native.php');
 })->where('lang', implode('|', activeLanguages()->toArray()));
