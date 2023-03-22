@@ -15,7 +15,7 @@ class PhoneNumberValidationRule implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (! preg_match("/^(?:\(?\+?48)?(?:[-\.\(\)\s]*(\d)){9}\)?$/", $value)) {
-            $fail('Nieprawidłowy format numeru telefonu.');
+            $fail(trans('phoneNumberValidationRule.invalidFormat'));
         }
     }
 }

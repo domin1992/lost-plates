@@ -1,12 +1,12 @@
 @extends('front.layouts.content-narrow')
 
 @section('subcontent')
-    <h1 class="text-lg md:text-2xl font-display">Tablica rejestracyjna {{ $plate['number'] }}</h1>
+    <h1 class="text-lg md:text-2xl font-display">{{ __('platesShow.registrationPlate', ['plateNumber' => $plate['number']]) }}</h1>
 
     <div class="flex flex-col lg:flex-row lg:gap-4 mt-4">
         <div class="lg:basis-2/3">
             <h2 class="md:text-xl font-display mt-4">
-                Pineski
+                {{ __('platesShow.markers') }}
             </h2>
 
             <div class="mt-2">
@@ -19,7 +19,7 @@
                                     <span class="block ml-1">{{ $marker['formatted_address'] }}</span>
                                 </span>
                             @endif
-                            <span class="inline-block whitespace-nowrap rounded-full px-[0.65em] pt-[0.35em] pb-[0.25em] text-center align-baseline text-[0.75em] font-bold text-white @if($marker['type'] == 'found') bg-primary @elseif($marker['type'] == 'lost') bg-danger @endif">{{ $marker['type'] == 'found' ? 'Znaleziono' : 'Zgubiono' }}</span><br>
+                            <span class="inline-block whitespace-nowrap rounded-full px-[0.65em] pt-[0.35em] pb-[0.25em] text-center align-baseline text-[0.75em] font-bold text-white @if($marker['type'] == 'found') bg-primary @elseif($marker['type'] == 'lost') bg-danger @endif">{{ __('common.' . $marker['type']) }}</span><br>
                             <span class="block w-full">{{ $marker['created_at_for_humans'] }}</span>
                         </div>
                         <div class="h-8 w-auto">

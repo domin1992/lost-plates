@@ -3,7 +3,7 @@
         <div class="modal-dialog relative w-[98%] max-w-2xl mx-auto mt-20 pointer-events-none">
             <div class="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
                 <div class="modal-body relative p-4 flex flex-col">
-                    <button type="button" class="box-content text-sm leading-none w-4 ml-auto border-none rounded-none opacity-50 absolute top-2 right-2 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-yellow-900 hover:opacity-75 hover:no-underline" data-bs-dismiss="modal" aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg></button>
+                    <button type="button" class="box-content text-sm leading-none w-4 ml-auto border-none rounded-none opacity-50 absolute top-2 right-2 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-yellow-900 hover:opacity-75 hover:no-underline" data-bs-dismiss="modal" :aria-label="$t('common.close')"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg></button>
 
                     <div class="self-center">
                         <FormInputRadioButtonsGroup
@@ -13,11 +13,11 @@
                             :errorMessage="errors.type !== undefined ? errors.type : null"
                             :options="[
                                 {
-                                    label: 'Zgubiona',
+                                    label: $t('common.lost'),
                                     value: 'lost',
                                 },
                                 {
-                                    label: 'Znaleziona',
+                                    label: $t('common.found'),
                                     value: 'found',
                                 },
                             ]"
@@ -26,7 +26,7 @@
 
                     <div class="mt-4">
                         <FormInputText
-                            label="Numer tablicy rejestracyjnej"
+                            :label="$t('common.plateNumber')"
                             name="plate_number"
                             v-model="plateNumber"
                             :required="true"
@@ -36,7 +36,7 @@
 
                     <div class="mt-4" v-if="type == 'lost'">
                         <FormInputText
-                            label="W odległości (opcjonalne)"
+                            :label="$t('createMarkerModal.radiusOptional')"
                             name="radius"
                             v-model="radius"
                             suffix="km"
@@ -45,33 +45,33 @@
                         />
                     </div>
 
-                    <span class="block mt-4 text-gray-600 text-sm" v-if="type == 'lost'">Podaj swój numer telefonu, lub email, aby inni mogli się z Tobą szybciej skontaktować po znaleznieniu tablic.</span>
+                    <span class="block mt-4 text-gray-600 text-sm" v-if="type == 'lost'">{{ $t('createMarkerModal.addYourPhoneNumberOrEmailLost') }}</span>
 
-                    <span class="block mt-4 text-gray-600 text-sm" v-else>Możesz podać numer telefonu lub email do siebie, aby umożliwić kontakt w sprawie znalezionej tablicy rejestracyjnej.</span>
+                    <span class="block mt-4 text-gray-600 text-sm" v-else>{{ $t('createMarkerModal.addYourPhoneNumberOrEmailFound') }}</span>
 
                     <div class="mt-4">
                         <FormInputText
-                            label="Numer telefonu"
+                            :label="$t('common.phoneNumber')"
                             name="phone_number"
                             v-model="phoneNumber"
                             :required="false"
                             :errorMessage="errors.phone_number !== undefined ? errors.phone_number : null"
-                            description="Numer telefonu nie jest widoczny dla robotów skanujących strony. Użytkownicy mogą się z Tobą skontaktować po odkryciu numeru telefonu."
+                            :description="$t('createMarkerModal.yourPhoneNumberWillBeInvisible')"
                         />
                     </div>
                     <div class="mt-4">
                         <FormInputEmail
-                            label="Email"
+                            :label="$t('common.email')"
                             name="email"
                             v-model="email"
                             :required="false"
                             :errorMessage="errors.email !== undefined ? errors.email : null"
-                            description="Email nie będzie widoczny dla innych użytkowników. Wpisz swój adres email, aby otrzymać wiadomość z informacją o znalezieniu tablicy rejestracyjnej za pośrednictwem portalu."
+                            :description="$t('createMarkerModal.yourEmailWillBeInvisible')"
                         />
                     </div>
                     <div class="mt-4" v-if="type == 'lost'">
                         <FormInputCheckbox
-                            label="Powiadom mnie kiedy inny użytkownik doda pineskę ze znalezioną tablicą z tym numerem"
+                            :label="$t('createMarkerModal.notifyWhenSomeoneAddPin')"
                             name="notify_when_found"
                             v-model="notifyWhenFound"
                             :required="false"
@@ -81,7 +81,7 @@
                     
                     <div class="mt-4">
                         <FormInputTextarea
-                            label="Dodatkowe informacje (opcjonalne)"
+                            :label="$t('createMarkerModal.additionalInformation')"
                             name="additional_info"
                             v-model="additionalInfo"
                             :required="false"
@@ -93,13 +93,13 @@
                         <Dropzone
                             mediaType="marker"
                             :errorMessage="errors.media !== undefined ? errors.media : null"
-                            description="Maksymalnie 5 zdjęć."
+                            :description="$t('createMarkerModal.maxFivePhotos')"
                             @updated="mediaUpdated"
                         />
                     </div>
 
                     <div class="mt-4 self-end">
-                        <button class="inline-block h-[2.25rem] leading-[2.25rem] px-4 bg-purple-heart text-white transition-colors rounded hover:bg-cyan focus-visible:bg-cyan" @click.stop="store">Wyślij</button>
+                        <button class="inline-block h-[2.25rem] leading-[2.25rem] px-4 bg-purple-heart text-white transition-colors rounded hover:bg-cyan focus-visible:bg-cyan" @click.stop="store">{{ $t('common.submit') }}</button>
                     </div>
                     
                 </div>

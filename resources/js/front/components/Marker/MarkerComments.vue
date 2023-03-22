@@ -10,13 +10,13 @@
             </div>
 
             <p class="text-center text-gray-600" v-if="!markerComments?.length">
-                Bądź pierwszym i dodaj komentarz!
+                {{ $t('markerComments.beFirstToComment') }}
             </p>
         </div>
         <div class="mt-auto pt-4">
             <FormInputText
                 name="name"
-                placeholder="Imię"
+                :placeholder="$t('common.firstName')"
                 v-model="newCommentName"
                 :errorMessage="errors.name !== undefined ? errors.name : null"
             />
@@ -24,14 +24,14 @@
             <div class="mt-1">
                 <FormInputTextarea
                     name="content"
-                    placeholder="Komentarz"
+                    :placeholder="$t('markerComments.comment')"
                     v-model="newCommentContent"
                     :errorMessage="errors.content !== undefined ? errors.content : null"
                 />
             </div>
 
             <div class="mt-1">
-                <button class="block w-full h-[2.25rem] leading-[2.25rem] px-4 bg-purple-heart text-white transition-colors rounded hover:bg-cyan focus-visible:bg-cyan" @click="submitMarkerComment">Dodaj komentarz</button>
+                <button class="block w-full h-[2.25rem] leading-[2.25rem] px-4 bg-purple-heart text-white transition-colors rounded hover:bg-cyan focus-visible:bg-cyan" @click="submitMarkerComment">{{ $t('markerComments.addComment') }}</button>
             </div>
         </div>
     </div>

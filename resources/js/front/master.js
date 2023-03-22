@@ -2,6 +2,7 @@ import axios from 'axios';
 import { createApp, defineAsyncComponent } from 'vue/dist/vue.esm-bundler';
 import mitt from 'mitt';
 import Toastify from 'toastify-js';
+import { i18nVue } from 'laravel-vue-i18n';
 
 window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -68,6 +69,14 @@ const app = window.app = createApp({
 });
 
 app.config.globalProperties.emitter = mitt();
+
+app.use(i18nVue, {
+    lang: window.globals.locale,
+    resolve: async lang => {
+        const langs = import.meta.glob('../../../lang/*.json');
+        return await langs[`../../../lang/${lang}.json`]();
+    }
+});
 
 app
     .component('BigMap', defineAsyncComponent(() => import("./components/Map/BigMap.vue")))

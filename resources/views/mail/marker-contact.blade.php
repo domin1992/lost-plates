@@ -1,9 +1,9 @@
 <x-mail::message>
-# Prośba o kontakt
+# {{ __('mailMarkerContact.title') }}
 
-W związku z tablicą rejestracyjną {{ $marker->plate->number }} na stronie {{ config('app.name') }}
+{{ __('mailMarkerContact.message', ['plateNumber' => $marker->plate->number, 'page' => config('app.name')]) }}
 
-## Dane kontaktowe
+## {{ __('mailMarkerContact.contactData') }}
 {{ $contactInfo }}
 
 </x-mail::message>

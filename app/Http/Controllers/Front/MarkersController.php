@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MarkerStoreRequest;
 use App\Http\Requests\MarkerSubmitContactRequest;
+use App\Libraries\MetaTagsManager;
 use App\Mail\MarkerContact;
 use App\Models\Marker;
 use App\Services\MarkerService;
@@ -12,7 +13,6 @@ use App\Transformers\MarkerTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
@@ -22,6 +22,14 @@ class MarkersController extends Controller
     public function index(string $lang, string $type): View
     {
         $markersCollection = Marker::where('type', $type)->paginate(15);
+
+        if ($type === Marker::TYPE_FOUND) {
+            MetaTagsManager::setTitle(trans('frontMarkersControllerIndex.metaTitleFound'));
+            MetaTagsManager::setDescription(trans('frontMarkersControllerIndex.metaDescriptionFound'));
+        } elseif ($type === Marker::TYPE_LOST) {
+            MetaTagsManager::setTitle(trans('frontMarkersControllerIndex.metaTitleLost'));
+            MetaTagsManager::setDescription(trans('frontMarkersControllerIndex.metaDescriptionLost'));
+        }
 
         return view('front.markers.index', [
             'markers' => fractal($markersCollection, new MarkerTransformer)->toArray(),
@@ -40,6 +48,12 @@ class MarkersController extends Controller
         if ($markerModel->type !== $type) {
             return redirect($markerModel->link());
         }
+
+        MetaTagsManager::setTitle(trans('frontMarkersControllerShow.metaTitle', [
+            'plateNumber' => $markerModel->plate->number,
+            'type' => trans('markersShow.' . $type)
+        ]));
+        MetaTagsManager::setDescription(trans('frontMarkersControllerShow.metaDescription', ['plateNumber' => $markerModel->plate->number]));
 
         return view('front.markers.show', [
             'marker' => fractal($markerModel, new MarkerTransformer)->toArray(),
@@ -67,7 +81,7 @@ class MarkersController extends Controller
         }
 
         return response()->json([
-            'message' => 'Pineska została dodana do mapy.',
+            'message' => trans('frontMarkersController.markerStored'),
         ]);
     }
 
@@ -140,7 +154,7 @@ class MarkersController extends Controller
 
         if (!$marker->email) {
             throw ValidationException::withMessages([
-                'constact' => 'Ten znacznik nie posiada adresu e-mail.',
+                'constact' => trans('frontMarkersController.thisMarkerHasNoEmailAssigned'),
             ]);
         }
 
@@ -148,7 +162,7 @@ class MarkersController extends Controller
             ->queue(new MarkerContact($marker, $request->contact));
 
         return response()->json([
-            'message' => 'Wiadomość została wysłana.',
+            'message' => trans('frontMarkersController.messageSent'),
         ]);
     }
 }

@@ -18,7 +18,7 @@ class EmailOrPhoneNumberValidationRule implements ValidationRule
             !preg_match("/^(?:\(?\+?48)?(?:[-\.\(\)\s]*(\d)){9}\)?$/", $value)
             && !filter_var($value, FILTER_VALIDATE_EMAIL)
         ) {
-            $fail('Nieprawidłowy format adresu e-mail lub numeru telefonu.');
+            $fail(trans('emailOrPhoneNumberValidationRule.invalidFormat'));
         }
     }
 }

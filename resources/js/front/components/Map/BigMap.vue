@@ -1,7 +1,7 @@
 <template>
     <div class="map-wrapper">
         <Alert
-            message="Kliknij na mapie, aby dodać pineskę."
+            :message="$t('bigMap.clickOnMapToAddPin')"
             type="info"
             customClasses="absolute top-12 left-0 right-0 w-5/6 z-10 mt-28"
             @closed="alertClosed"
@@ -35,6 +35,7 @@
 import { Loader } from "@googlemaps/js-api-loader";
 import { defineAsyncComponent, isProxy, toRaw } from 'vue';
 import Cookies from 'js-cookie';
+import { trans } from 'laravel-vue-i18n';
 export default {
     components: {
         Alert: defineAsyncComponent(() => import('./../Partials/Alert.vue')),
@@ -128,13 +129,13 @@ export default {
         },
         placeNewMarker(latLng) {
             const infoWindow = new google.maps.InfoWindow({
-                content: '<div class="text-center"><p>Tutaj pojawi się pineska<br>z informacją o tablicach rejestracyjnych</p><button type="button" class="inline-block mt-2 h-[18px] leading-none px-2 mx-2 bg-purple-heart text-sm text-white transition-colors rounded hover:bg-cyan focus-visible:bg-cyan js-toggle-create-marker-modal">Dodaj</button></div>',
+                content: `<div class="text-center"><p>${trans('bigMap.hereWillAppearPinWithInformationAboutRegistrationPlate')}</p><button type="button" class="inline-block mt-2 h-[18px] leading-none px-2 mx-2 bg-purple-heart text-sm text-white transition-colors rounded hover:bg-cyan focus-visible:bg-cyan js-toggle-create-marker-modal">${trans('common.add')}</button></div>`,
             });
 
             this.newMarker = new google.maps.Marker({
                 position: latLng,
                 map: this.map,
-                title: 'Dodaj pineskę',
+                title: trans('bigMap.addPin'),
             });
 
             infoWindow.open(this.map, this.newMarker);
@@ -215,7 +216,7 @@ export default {
                 this.infoWindow = new google.maps.InfoWindow({
                     content:
                         `<div class="text-center">
-                            ${this.activeMarker.type == 'found' ? 'Znaleniono' : 'Zgubiono'}<br>
+                            ${trans(`common.${this.activeMarker.type}`)}<br>
                             <strong>${this.activeMarker.plate_number}</strong>
                         </div>`,
                 });

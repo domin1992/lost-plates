@@ -7,11 +7,11 @@
         <div>
             <div :class="['flex justify-between', {'mt-8': detailsExpanded}]">
                 <span :class="['block font-display text-lg']">{{ activeMarker?.plate_number }}</span>
-                <span :class="['block whitespace-nowrap rounded-full px-[0.65em] pt-[0.35em] pb-[0.25em] text-center align-baseline text-[0.75em] font-bold text-white', {'bg-primary': activeMarker?.type == 'found'}, {'bg-danger': activeMarker?.type == 'lost'}]">{{ activeMarker?.type == 'found' ? 'Znaleziono' : 'Zgubiono' }}</span>
+                <span :class="['block whitespace-nowrap rounded-full px-[0.65em] pt-[0.35em] pb-[0.25em] text-center align-baseline text-[0.75em] font-bold text-white', {'bg-primary': activeMarker?.type == 'found'}, {'bg-danger': activeMarker?.type == 'lost'}]">{{ $t(`common.${activeMarker?.type}`) }}</span>
             </div>
             <p class="mt-2 text-sm" v-show="activeMarker?.additional_info && !detailsExpanded">{{ shortenAdditionalInfo(activeMarker?.additional_info) }}</p>
             <p class="mt-4 text-sm" v-show="activeMarker?.additional_info && detailsExpanded">{{ activeMarker?.additional_info }}</p>
-            <span class="mt-2 text-sm" v-show="!detailsExpanded && activeMarker?.marker_media.length">Zdjęcia: {{ activeMarker?.marker_media.length }}</span>
+            <span class="mt-2 text-sm" v-show="!detailsExpanded && activeMarker?.marker_media.length">{{ $t('mapDetails.photos') }}: {{ activeMarker?.marker_media.length }}</span>
             <div class="flex mt-4 gap-2" v-show="detailsExpanded && activeMarker?.marker_media.length">
                 <button
                     class="block w-16 h-16"
@@ -27,7 +27,7 @@
         <MarkerComments :marker="activeMarker" @refreshMarker="$emit('refreshMarker', {markerId: activeMarker.id})" />
 
         <div class="mt-4 text-center">
-            <a :href="activeMarker?.link" class="inline-block h-[2.25rem] leading-[2.25rem] px-4 bg-purple-heart text-white transition-colors rounded hover:bg-cyan focus-visible:bg-cyan js-active-marker-link">Szczegóły</a>
+            <a :href="activeMarker?.link" class="inline-block h-[2.25rem] leading-[2.25rem] px-4 bg-purple-heart text-white transition-colors rounded hover:bg-cyan focus-visible:bg-cyan js-active-marker-link">{{ $t('common.details') }}</a>
         </div>
     </div>
 </template>

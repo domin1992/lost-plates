@@ -3,9 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        @yield('meta')
-
-        <title>Zgubione/znalezione tablice rejestracyjne</title>
+        <x-meta-tags />
 
         @vite(['resources/scss/front/master.scss'])
 

@@ -7,7 +7,7 @@
                 id="plate_number"
                 name="plate_number"
                 v-model="plateNumber"
-                placeholder="Wpisz numer tablicy rejestracyjnej"
+                :placeholder="$t('markersList.typePlateNumber')"
             >
 
             <span class="block absolute top-1/2 right-2 -translate-y-1/2">

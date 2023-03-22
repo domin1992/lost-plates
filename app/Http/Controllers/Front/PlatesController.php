@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Libraries\MetaTagsManager;
 use App\Models\Plate;
 use App\Transformers\PlateTransformer;
 use Illuminate\Http\RedirectResponse;
@@ -29,6 +30,9 @@ class PlatesController extends Controller
             'lng' => $marker->lng,
             'type' => $marker->type,
         ])->toArray();
+
+        MetaTagsManager::setTitle(trans('frontPlatesControllerShow.metaTitle', ['plateNumber' => $plateModel->number]));
+        MetaTagsManager::setDescription(trans('frontPlatesControllerShow.metaDescription', ['plateNumber' => $plateModel->number]));
 
         return view('front.plates.show', [
             'plate' => fractal($plateModel, new PlateTransformer)->parseIncludes('markers')->toArray(),
