@@ -11,6 +11,8 @@
         <link rel="preload" href="{{ Vite::asset('resources/fonts/Montserrat-Regular.ttf') }}" as="font" crossorigin="*">
         <link rel="preload" href="{{ Vite::asset('resources/fonts/Montserrat-Bold.ttf') }}" as="font" crossorigin="*">
 
+        @include('front.partials.favicon')
+
         @if (app()->isProduction())
             <!-- Google Tag Manager -->
             <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
