@@ -53,7 +53,7 @@ class Test extends Mailable
     public function attachments(): array
     {
         return [
-            Attachment::fromPath(storage_path('app/seeds/example-image1.png')),
+            Attachment::fromPath(storage_path('app/seeds/example-image6.webp')),
         ];
     }
 }

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./vendor/bin/sail down --rmi all -v
+docker compose down --rmi all -v

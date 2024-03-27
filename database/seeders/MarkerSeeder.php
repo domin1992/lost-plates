@@ -17,7 +17,7 @@ class MarkerSeeder extends Seeder
     public function run(): void
     {
         Plate::factory()
-            ->count(50)
+            ->count(10)
             ->create()
             ->each(function ($plate) {
                 $marker = Marker::factory()

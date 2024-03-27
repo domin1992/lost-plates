@@ -1,24 +1,28 @@
 #!/bin/bash
 
+MAIN_CONTAINER_NAME="lost-plates.test"
+WWW_DATA="www-data"
+
+docker compose up --detach --build
+
 if [ ! -f ".env" ]; then
-    cp .env.example .env
-    ./vendor/bin/sail artisan key:generate
+    cp .env.local .env
+    docker exec $MAIN_CONTAINER_NAME php artisan key:generate
 else
     echo "File .env already exists"
 fi
 
-./vendor/bin/sail up -d
+docker exec -u $WWW_DATA $MAIN_CONTAINER_NAME composer install
+docker exec -u $WWW_DATA $MAIN_CONTAINER_NAME npm i
 
-docker exec lostplates cron
-./vendor/bin/sail composer install
-./vendor/bin/sail npm i
+docker exec -u $WWW_DATA $MAIN_CONTAINER_NAME php artisan storage:link
 
-./vendor/bin/sail artisan storage:link
+docker exec -u $WWW_DATA $MAIN_CONTAINER_NAME npm run prod
 
-./vendor/bin/sail npm run prod
+docker exec $MAIN_CONTAINER_NAME chmod -R 777 .
 
-docker exec lostplates chmod -R 777 .
-
-./vendor/bin/sail artisan config:clear
-./vendor/bin/sail artisan config:cache
-./vendor/bin/sail artisan migrate --seed
+docker exec -u $WWW_DATA $MAIN_CONTAINER_NAME php artisan config:clear
+docker exec -u $WWW_DATA $MAIN_CONTAINER_NAME php artisan config:cache
+#docker exec -u $WWW_DATA $MAIN_CONTAINER_NAME php artisan ide-helper:generate
+sleep 10
+docker exec -u $WWW_DATA $MAIN_CONTAINER_NAME php artisan migrate --seed

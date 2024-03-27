@@ -1,59 +1,121 @@
-FROM ubuntu:22.04
+FROM php:8.1-apache
 
-LABEL maintainer="Taylor Otwell"
-
-ARG WWWGROUP
-ARG NODE_VERSION=16
-
-WORKDIR /var/www/html
+ARG NODE_VERSION=18.19.0
+ARG NVM_VERSION=0.39.7
+ARG WORKDIR=/var/www/html
+ARG HOST_UID=1000
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV TZ=UTC
+ENV DOCUMENT_ROOT=${WORKDIR}
+ENV LARAVEL_PROCS_NUMBER=1
+ENV USER=www-data
+
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+ENV APACHE_CONFDIR /etc/apache2
+ENV APACHE_ENVVARS $APACHE_CONFDIR/envvars
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt-get update \
-    && apt-get install -y gnupg gosu curl ca-certificates zip unzip git supervisor libcap2-bin libpng-dev python2 dnsutils webp-pixbuf-loader imagemagick \
-    && curl -sS 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x14aa40ec0831756756d7f66c4f4ea0aae5267a6c' | gpg --dearmor | tee /usr/share/keyrings/ppa_ondrej_php.gpg > /dev/null \
-    && echo "deb [signed-by=/usr/share/keyrings/ppa_ondrej_php.gpg] https://ppa.launchpadcontent.net/ondrej/php/ubuntu jammy main" > /etc/apt/sources.list.d/ppa_ondrej_php.list \
-    && apt-get update \
-    && apt-get install -y php8.1-cli php8.1-dev \
-       php8.1-curl php8.1-gd \
-       php8.1-mysql php8.1-mbstring \
-       php8.1-xml php8.1-zip php8.1-bcmath \
-       php8.1-intl php8.1-readline \
-       php8.1-ldap \
-       php8.1-msgpack php8.1-igbinary php8.1-redis php8.1-swoole \
-       php8.1-memcached php8.1-pcov php8.1-xdebug \
-       php8.1-imagick \
+    && apt-get install -y \
+        git \
+        curl \
+        ca-certificates \
+        gnupg \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libwebp-dev \
+        libmemcached-dev \
+        libzip-dev \
+        libpng-dev \
+        libonig-dev \
+        libxml2-dev \
+        librdkafka-dev \
+        libpq-dev \
+        libssl-dev \
+        openssh-server \
+        zip \
+        unzip \
+        supervisor \
+        sqlite3  \
+        nano \
+        cron \
+        libmagickwand-dev \
+        gosu \
+    && pecl install \
+        imagick \
+        memcached \
+        xdebug \
+    && mkdir -p /etc/apt/keyrings \
     && php -r "readfile('https://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer \
-    && curl -sLS https://deb.nodesource.com/setup_$NODE_VERSION.x | bash - \
-    && apt-get install -y nodejs \
-    && npm install -g npm \
-    && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarn.gpg >/dev/null \
-    && echo "deb [signed-by=/usr/share/keyrings/yarn.gpg] https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list \
-    && curl -sS https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | tee /usr/share/keyrings/pgdg.gpg >/dev/null \
-    && echo "deb [signed-by=/usr/share/keyrings/pgdg.gpg] http://apt.postgresql.org/pub/repos/apt jammy-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
-    && apt-get update \
-    && apt-get install -y mysql-client \
-    && apt-get install -y cron \
-    && apt-get -y autoremove \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    && mkdir -p /usr/local/nvm
 
-RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.1
+ENV NVM_DIR /usr/local/nvm
 
-RUN groupadd --force -g $WWWGROUP sail
-RUN useradd -ms /bin/bash --no-user-group -g $WWWGROUP -u 1337 sail
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v$NVM_VERSION/install.sh | bash \
+    && /bin/bash -c "source $NVM_DIR/nvm.sh && nvm install $NODE_VERSION && nvm use $NODE_VERSION"
 
-COPY start-container /usr/local/bin/start-container
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY php.ini /etc/php/8.1/cli/conf.d/99-sail.ini
+ENV NODE_PATH $NVM_DIR/versions/node/v$NODE_VERSION/lib/node_modules
+ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
+
+RUN docker-php-ext-configure gd \
+    --with-freetype \
+    --with-jpeg \
+    --with-webp
+
+RUN docker-php-ext-install \
+    zip \
+    mbstring \
+    exif \
+    pcntl \
+    bcmath \
+    -j$(nproc) \
+    -j$(nproc) gd \
+    intl \
+    pdo_mysql
+
+RUN docker-php-ext-enable \
+    imagick \
+    memcached
+
+WORKDIR $WORKDIR
+
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+
+COPY bin/docker/8.1/php.ini $PHP_INI_DIR/conf.d/99-overrides.ini
+COPY bin/docker/8.1/supervisord.conf /etc/supervisor/supervisord.conf
+COPY bin/docker/8.1/start-container /usr/local/bin/start-container
 RUN chmod +x /usr/local/bin/start-container
+COPY bin/docker/8.1/000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY bin/docker/8.1/default-ssl.conf /etc/apache2/sites-available/default-ssl.conf
+COPY bin/docker/8.1/apache2.conf /etc/apache2/apache2.conf
+COPY bin/docker/8.1/certificate.crt /etc/ssl/certs/certificate.crt
+COPY bin/docker/8.1/certificate.key /etc/ssl/private/certificate.key
 
-RUN touch /var/log/cron.log
-RUN echo "* * * * * root /usr/bin/php /var/www/html/artisan schedule:run >> /dev/null 2>&1" >> /etc/crontab
+RUN chmod 600 /etc/ssl/private/certificate.key \
+    && chmod 600 /etc/ssl/certs/certificate.crt \
+    && ln -s /etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-enabled/default-ssl.conf \
+    && a2enmod ssl \
+    && a2enmod rewrite \
+    && a2enmod headers
 
-EXPOSE 8000
+RUN touch /var/log/cron.log \
+    && echo "* * * * * $USER /usr/local/bin/php /var/www/html/artisan schedule:run >> /dev/null 2>&1" >> /etc/crontab
 
-ENTRYPOINT ["start-container"]
+RUN usermod -u ${HOST_UID} $USER \
+    && groupmod -g ${HOST_UID} $USER \
+    && mkdir /home/$USER \
+    && chown -R $USER:$USER /home/$USER \
+    && usermod -d /home/$USER $USER \
+    && chmod -R 755 $WORKDIR \
+    && chown -R $USER:$USER $WORKDIR
+
+EXPOSE 80
+EXPOSE 443
+EXPOSE 6379
+
+CMD ["start-container"]
+
+HEALTHCHECK CMD curl --fail https://lost-plates.test || exit 1
