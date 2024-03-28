@@ -30,7 +30,7 @@
             height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <!-- End Google Tag Manager (noscript) -->
         @endif
-        <div id="lost-plates" class="lost-plates min-h-screen flex flex-col">
+        <div id="lostplates" class="lostplates min-h-screen flex flex-col">
             @include('front.partials.header')
             @include('front.partials.sidebar')
 

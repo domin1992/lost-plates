@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MAIN_CONTAINER_NAME="lost-plates.test"
+MAIN_CONTAINER_NAME="lostplates.test"
 WWW_DATA="www-data"
 
 docker compose up --detach --build

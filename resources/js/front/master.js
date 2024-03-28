@@ -87,7 +87,7 @@ app
     .component('RevealPhoneNumber', defineAsyncComponent(() => import("./components/Partials/RevealPhoneNumber.vue")))
     .component('EmailContactForm', defineAsyncComponent(() => import("./components/Marker/EmailContactForm.vue")));
 
-app.mount('#lost-plates');
+app.mount('#lostplates');
 
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelector(".js-sidebar-opener").addEventListener("click", () => {

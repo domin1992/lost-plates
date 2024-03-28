@@ -1,7 +1,7 @@
 version: '3'
 services:
-    lost-plates.test:
-        container_name: 'lost-plates.test'
+    lostplates.test:
+        container_name: 'lostplates.test'
         build:
             context: .
             dockerfile: bin/docker/8.1/Dockerfile

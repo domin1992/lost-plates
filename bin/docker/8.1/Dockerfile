@@ -118,4 +118,4 @@ EXPOSE 6379
 
 CMD ["start-container"]
 
-HEALTHCHECK CMD curl --fail https://lost-plates.test || exit 1
+HEALTHCHECK CMD curl --fail https://lostplates.test || exit 1
