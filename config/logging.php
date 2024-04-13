@@ -117,6 +117,13 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        'turnstile' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/turnstile/turnstile.log'),
+            'level' => 'debug',
+            'days' => 3,
+        ],
     ],
 
 ];

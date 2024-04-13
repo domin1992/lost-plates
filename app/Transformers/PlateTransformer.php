@@ -31,7 +31,6 @@ class PlateTransformer extends TransformerAbstract
         return [
             'id' => $plate->id,
             'number' => $plate->number,
-            'link' => $plate->link(),
         ];
     }
 

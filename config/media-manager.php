@@ -1,14 +1,9 @@
 <?php
 
 return [
-    'classes' => [
-        'media' => \App\Models\Media::class,
-        'image-processor' => \Zencoreitservices\MediaManager\Processors\ImageProcessor::class,
-    ],
-
     'disk' => 'public',
 
-    'image-driver' => 'imagick',
+    'image-driver' => \Intervention\Image\Drivers\Imagick\Driver::class,
 
     'background-color' => '#FFFFFF',
 

@@ -18,12 +18,4 @@ class Plate extends Model
     {
         return $this->hasMany(Marker::class);
     }
-
-    public function link(): string
-    {
-        return route('front.plates.show', [
-            'lang' => app()->getLocale(),
-            'number' => $this->number,
-        ]);
-    }
 }

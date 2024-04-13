@@ -30,8 +30,8 @@ class MarkerMediaTransformer extends TransformerAbstract
     {
         return [
             'id' => $markerMedia->id,
-            'marker_id' => $markerMedia->marker_id,
-            'media_id' => $markerMedia->media_id,
+            'markerId' => $markerMedia->marker_id,
+            'mediaId' => $markerMedia->media_id,
         ];
     }
 

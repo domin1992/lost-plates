@@ -1,0 +1,14 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "include": ["env.d.ts", "resources/js/front/**/*", "resources/js/front/**/*.vue"],
+  "exclude": ["resources/js/**/__tests__/*"],
+  "compilerOptions": {
+    "composite": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@front/*": ["./resources/js/front/*"],
+      "~/*": ["./*"],
+    }
+  }
+}

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\Turnstile;
 use Illuminate\Foundation\Http\FormRequest;
 
 class MarkerCommentStoreRequest extends FormRequest
@@ -24,6 +25,7 @@ class MarkerCommentStoreRequest extends FormRequest
         return [
             'name' => 'required|string|max:191',
             'content' => 'required|string',
+            'cfTurnstileResponse' => ['required', 'string', new Turnstile],
         ];
     }
 }

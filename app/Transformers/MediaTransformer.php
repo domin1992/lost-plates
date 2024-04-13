@@ -46,11 +46,11 @@ class MediaTransformer extends TransformerAbstract
 
         return [
             'id' => $media->id,
-            'user_id' => $media->user_id,
-            'file_type' => $media->type,
-            'image_type' => $media->image_type,
-            'file_name' => $media->name,
-            'file_extension' => $media->extension,
+            'userId' => $media->user_id,
+            'fileType' => $media->type,
+            'imageType' => $media->image_type,
+            'fileName' => $media->name,
+            'fileExtension' => $media->extension,
             'url' => $url,
         ];
     }

@@ -3,6 +3,7 @@
 namespace App\Transformers;
 
 use App\Models\Marker;
+use App\Models\MarkerComment;
 use League\Fractal\TransformerAbstract;
 
 class MarkerTransformer extends TransformerAbstract
@@ -11,8 +12,8 @@ class MarkerTransformer extends TransformerAbstract
      * List of resources to automatically include
      */
     protected array $defaultIncludes = [
-        'marker_media',
-        'marker_comments',
+        'markerMedia',
+        'markerComments',
         'plate',
     ];
 
@@ -37,16 +38,17 @@ class MarkerTransformer extends TransformerAbstract
             'type' => $marker->type,
             'lat' => $marker->lat,
             'lng' => $marker->lng,
-            'formatted_address' => $marker->formatted_address,
-            'google_maps_link' => $marker->googleMapsLink(),
-            'google_place_id' => $marker->google_place_id,
+            'formattedAddress' => $marker->formatted_address,
+            'googleMapsLink' => $marker->googleMapsLink(),
+            'googlePlaceId' => $marker->google_place_id,
             'radius' => $marker->radius,
-            'additional_info' => $marker->additional_info,
-            'plate_number' => $plate->number,
-            'phone_number' => $marker->hiddenPhoneNumber(),
-            'has_email' => $marker->email,
-            'link' => $marker->link(),
-            'created_at_for_humans' => $marker->created_at->diffForHumans(),
+            'additionalInfo' => $marker->additional_info,
+            'plateNumber' => $plate->number,
+            'phoneNumber' => $marker->hiddenPhoneNumber(),
+            'hasPhoneNumber' => !is_null($marker->phone_number) && !empty($marker->phone_number),
+            'isPhoneNumberRevealed' => false,
+            'hasEmail' => !is_null($marker->email) && !empty($marker->email),
+            'createdAtForHumans' => $marker->created_at->diffForHumans(),
         ];
     }
 

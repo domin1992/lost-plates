@@ -35,4 +35,11 @@ return [
         'cloud_api_key' => env('GOOGLE_CLOUD_API_KEY'),
         'tag_manager_container_id' => env('GOOGLE_TAG_MANAGER_CONTAINER_ID'),
     ],
+
+    'cloudflare' => [
+        'turnstile' => [
+            'site_key' => env('TURNSTILE_SITE_KEY'),
+            'secret_key' => env('TURNSTILE_SECRET_KEY'),
+        ],
+    ],
 ];

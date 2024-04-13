@@ -30,11 +30,11 @@ class MarkerCommentTransformer extends TransformerAbstract
     {
         return [
             'id' => $markerComment->id,
-            'marker_id' => $markerComment->marker_id,
+            'markerId' => $markerComment->marker_id,
             'name' => $markerComment->name,
             'content' => $markerComment->content,
-            'created_at_display' => $markerComment->created_at->diffForHumans(),
-            'created_at' => $markerComment->created_at,
+            'createdAtDisplay' => $markerComment->created_at->diffForHumans(),
+            'createdAt' => $markerComment->created_at,
         ];
     }
 }

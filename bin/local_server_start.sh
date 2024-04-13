@@ -17,7 +17,7 @@ docker exec -u $WWW_DATA $MAIN_CONTAINER_NAME npm i
 
 docker exec -u $WWW_DATA $MAIN_CONTAINER_NAME php artisan storage:link
 
-docker exec -u $WWW_DATA $MAIN_CONTAINER_NAME npm run prod
+docker exec -u $WWW_DATA $MAIN_CONTAINER_NAME npm run build
 
 docker exec $MAIN_CONTAINER_NAME chmod -R 777 .
 

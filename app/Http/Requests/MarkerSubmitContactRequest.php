@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Rules\EmailOrPhoneNumberValidationRule;
+use App\Rules\Turnstile;
 use Illuminate\Foundation\Http\FormRequest;
 
 class MarkerSubmitContactRequest extends FormRequest
@@ -24,6 +25,7 @@ class MarkerSubmitContactRequest extends FormRequest
     {
         return [
             'contact' => ['required', 'string', 'max:191', new EmailOrPhoneNumberValidationRule],
+            'cfTurnstileResponse' => ['required', 'string', new Turnstile],
         ];
     }
 }

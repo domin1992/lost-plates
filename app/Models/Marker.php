@@ -36,6 +36,11 @@ class Marker extends Model
         'plate',
     ];
 
+    protected $casts = [
+        'lat' => 'float',
+        'lng' => 'float',
+    ];
+
     public function plate(): Relation
     {
         return $this->belongsTo(Plate::class, 'plate_id', 'id');
@@ -69,15 +74,6 @@ class Marker extends Model
         }
 
         return $this->phone_number;
-    }
-
-    public function link(): string
-    {
-        return route('front.markers.show', [
-            'lang' => app()->getLocale(),
-            'type' => $this->type,
-            'id' => $this->id,
-        ]);
     }
 
     public function googleMapsLink(): string

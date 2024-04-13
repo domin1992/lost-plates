@@ -14,12 +14,12 @@ class MarkerService
         string $type,
         float $lat,
         float $lng,
-        array $media,
+        ?array $media,
         ?string $phoneNumber,
         ?string $email,
         ?float $radius,
         ?string $additionalInfo,
-        ?bool $notifyWhenFound,
+        ?bool $notifyWhenFound
     ): Marker {
         $plateNumber = Tools::formatPlateNumber($plateNumber);
 
@@ -40,15 +40,17 @@ class MarkerService
                 : null,
             'email' => $email,
             'additional_info' => $additionalInfo,
-            'notify_when_found' => $notifyWhenFound,
+            'notify_when_found' => $notifyWhenFound === true,
         ]);
 
-        collect($media)->map(function ($mediaId) use ($marker) {
-            MarkerMedia::create([
-                'marker_id' => $marker->id,
-                'media_id' => $mediaId,
-            ]);
-        });
+        if (!is_null($media)) {
+            collect($media)->map(function ($mediaId) use ($marker) {
+                MarkerMedia::create([
+                    'marker_id' => $marker->id,
+                    'media_id' => $mediaId,
+                ]);
+            });
+        }
 
         return $marker;
     }

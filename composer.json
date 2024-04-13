@@ -7,7 +7,7 @@
     "require": {
         "php": "^8.3",
         "guzzlehttp/guzzle": "^7.8",
-        "intervention/image": "^2.7",
+        "intervention/image": "^3.5",
         "laravel/framework": "^11.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
@@ -28,7 +28,6 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-            "Zencoreitservices\\MediaManager\\": "package/laravel-media-manager/src/",
             "Zencoreitservices\\Translator\\": "package/laravel-deepl-translator/src/"
         },
         "files": [
