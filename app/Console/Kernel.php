@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('model:prune')->everyThreeHours();
         $schedule->command('zncr:translate')->hourly();
         $schedule->command(GeocodeMarker::class)->everyFifteenMinutes();
-        $schedule->command(GenerateSitemap::class)->daily();
+        // $schedule->command(GenerateSitemap::class)->daily();
 
         if (app()->isProduction()) {
             $schedule->command('monitor-queue-listener')->everyFiveMinutes();
