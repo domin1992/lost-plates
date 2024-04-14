@@ -17,6 +17,12 @@ jobs:
         with:
           node-version: 18
 
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ vars.SSH_PRIVATE_KEY }}
+          known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
+
       - name: Adding known hosts
         run: ssh-keyscan -p ${{ vars.SSH_PORT }} ${{ vars.SSH_HOST }} >> ~/.ssh/known_hosts
 
@@ -34,12 +40,6 @@ jobs:
 
       - name: Compress builds
         run: zip -r build.zip public/build
-
-      - name: Install SSH Key
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ vars.SSH_PRIVATE_KEY }}
-          known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
 
       - name: Deploy
         run: ssh -p ${{ vars.SSH_PORT }} -o StrictHostKeyChecking=no ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} "cd ${{ vars.SSH_PATH }}; git pull;"
