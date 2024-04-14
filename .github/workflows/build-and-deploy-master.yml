@@ -17,6 +17,12 @@ jobs:
         with:
           node-version: 18
 
+      - name: Adding known hosts
+        run: ssh-keyscan -p ${{ vars.SSH_PORT }} ${{ vars.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Download .env file
+        run: scp -P ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }}:${{ vars.SSH_PATH }}/.env ./
+
       - name: Install composer packages
         run: composer install --prefer-dist --no-progress
 
@@ -34,9 +40,6 @@ jobs:
         with:
           key: ${{ vars.SSH_PRIVATE_KEY }}
           known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
-
-      - name: Adding known hosts
-        run: ssh-keyscan -p ${{ vars.SSH_PORT }} ${{ vars.SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy
         run: ssh -p ${{ vars.SSH_PORT }} -o StrictHostKeyChecking=no ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} "cd ${{ vars.SSH_PATH }}; git pull;"
