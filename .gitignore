@@ -18,7 +18,3 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
-!/lang/
-/lang/*
-!/lang/pl/
-!/lang/pl.json

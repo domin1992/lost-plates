@@ -97,6 +97,11 @@ return [
 
     'fallback_locale' => 'pl',
 
+    'allowed_locale' => [
+        'pl' => 'Polski',
+        'en' => 'English',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Faker Locale

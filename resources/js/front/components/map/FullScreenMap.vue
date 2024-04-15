@@ -146,7 +146,6 @@ const initMap = async (): Promise<void> => {
         }
     });
 
-    /*
     localizationService?.getUserLocalization(
         (position: GeolocationPosition) => {
             mapInstance.value?.setCenter({
@@ -156,7 +155,6 @@ const initMap = async (): Promise<void> => {
             mapInstance.value?.setZoom(11);
         }
     );
-    */
 
     mapInstance.value.addListener('idle', debounce(() => {
         if (!preventFromRefresh.value) getMarkers();

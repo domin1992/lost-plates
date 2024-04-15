@@ -2,8 +2,8 @@
     <div
         :class="[
             'p-4 bg-white flex flex-col absolute bottom-0 left-0 h-14 w-full md:top-0 md:bottom-auto md:left-auto md:right-0 md:h-full md:w-1/4 transition-transform transform translate-y-full md:translate-x-full md:translate-y-0 shadow-lg z-50 overflow-hidden',
-            {'transform-none md:transform-none': selectedMarker},
-            !detailsExpanded ? 'h-24 cursor-pointer md:cursor-auto' : 'h-full',
+            {'transform-none md:transform-none': !!selectedMarker},
+            !detailsExpanded ? 'h-28 cursor-pointer md:cursor-auto' : 'h-full',
         ]"
         @click="showDetails"
     >

@@ -1,5 +1,5 @@
 <template>
-    <div class="mt-14 flex flex-col h-[calc(100vh-3.5rem)] relative">
+    <div class="mt-20 flex flex-col h-[calc(100vh-5rem)] relative overflow-hidden">
         <FullScreenMap
             class="h-full"
         />

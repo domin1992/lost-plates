@@ -15,7 +15,6 @@ import axios from 'axios';
 import PrimeVue from 'primevue/config';
 import { MarkersService } from './services/MarkersService';
 import { ConfigService } from './services/ConfigService';
-import { UserLanguageService } from './services/UserLanguageService';
 import { LocalizationService } from './services/LocalizationService';
 import { emitter } from './utils/eventBus';
 import { MessageBagErrorPlugin } from './utils/messageBagErrorPlugin';
@@ -30,8 +29,35 @@ import { TurnstileService } from './services/TurnstileService';
 declare global {
     interface Window {
         turnstile: Turnstile.Turnstile;
+        globalVariables: any;
     }
 }
+
+declare module "@vue/runtime-core" {
+    //Bind to `this` keyword
+    interface ComponentCustomProperties {
+        $messageBagFirstError: (messageBagError: MessageBagError, key: string) => string;
+        $messageBagMessage: (messageBagError: MessageBagError) => string;
+    }
+}
+
+// Create Vue app
+const app = createApp(App);
+
+// Use i18n
+app.use(i18nVue, {
+    lang: 'pl',
+    resolve: async (lang: string) => {
+        const langs = import.meta.glob('../../../lang/*.json');
+        return await langs[`../../../lang/${lang}.json`]();
+    },
+});
+
+// Instatiante config service
+const configService = new ConfigService(
+    import.meta.env.VITE_GOOGLE_CLOUD_API_KEY,
+    import.meta.env.VITE_TURNSTILE_SITE_KEY
+);
 
 // Create axios instance
 const axiosInstance = axios.create({
@@ -39,26 +65,11 @@ const axiosInstance = axios.create({
     timeout: 1000,
     headers: {
         'Accept': 'application/json',
+        'Accept-Language': 'pl',
     },
 });
 
-// Create Vue app
-const app = createApp(App);
-
 app.use(MessageBagErrorPlugin);
-declare module "@vue/runtime-core" {
-    //Bind to `this` keyword
-    interface ComponentCustomProperties {
-      $messageBagFirstError: (messageBagError: MessageBagError, key: string) => string;
-      $messageBagMessage: (messageBagError: MessageBagError) => string;
-    }
-  }
-
-// Instatiante config service
-const configService = new ConfigService(
-    import.meta.env.VITE_GOOGLE_CLOUD_API_KEY,
-    import.meta.env.VITE_TURNSTILE_SITE_KEY
-);
 
 // Define services in one plate
 const services = {
@@ -72,7 +83,6 @@ const services = {
     notificationService: new NotificationService(),
     platesService: new PlatesService(axiosInstance),
     turnstileService: new TurnstileService(configService),
-    userLanguageService: new UserLanguageService(configService),
 };
 
 // Provide services for components
@@ -84,20 +94,11 @@ Object.entries(services).forEach(([key, instance]) => {
 app.use(PrimeVue);
 app.use(DialogService);
 
-// Use i18n
-app.use(i18nVue, {
-    lang: services.userLanguageService.getUserLanguage(),
-    resolve: async (lang: string) => {
-        const langs = import.meta.glob('../../../lang/*.json');
-        return await langs[`../../../lang/${lang}.json`]();
-    },
-});
+// Use router
+app.use(router);
 
 // Use Pinia and provide services
 app.use(createPinia());
-
-// Use router
-app.use(router);
 
 // Mount app
 app.mount('#lostplates');

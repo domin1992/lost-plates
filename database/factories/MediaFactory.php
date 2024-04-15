@@ -63,11 +63,7 @@ class MediaFactory extends Factory
                     )
                 );
 
-            $media->addFromPathWithoutModel(
-                $file,
-                'image',
-                'marker'
-            );
+            $media->addFile($file, true);
         });
     }
 }

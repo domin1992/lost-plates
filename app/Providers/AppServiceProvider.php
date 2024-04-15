@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\View\Components\Front\MetaTagsComponent;
+use App\View\Components\Front\GlobalVariablesComponent;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Blade;
@@ -32,5 +33,6 @@ class AppServiceProvider extends ServiceProvider
     private function bootComponents(): void
     {
         Blade::component('meta-tags', MetaTagsComponent::class);
+        Blade::component('global-variables', GlobalVariablesComponent::class);
     }
 }

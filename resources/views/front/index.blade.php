@@ -27,6 +27,8 @@
 
     <div id="lostplates"></div>
 
+    <x-global-variables></x-global-variables>
+
     @vite('resources/js/front/main.ts')
 </body>
 </html>
